@@ -212,6 +212,7 @@ export default {
                 ],
             },
             defaultValue: 'globe',
+            bindable: true,
         },
         logoPosition: {
             label: {
@@ -236,6 +237,7 @@ export default {
             },
             type: 'Color',
             defaultValue: '#F23636',
+            bindable: true,
         },
         apiAccessToken: {
             section: 'settings',
@@ -246,6 +248,7 @@ export default {
                     'pk.eyJ1IjoiYWxleGlzamMiLCJhIjoiY2w2eHUwOXR0MHdrczNncWx2eGMxcXdqbSJ9.qDyDmFSrF81mnB_VkeFPmK',
             },
             defaultValue: '',
+            bindable: true,
         },
         lat: {
             section: 'settings',

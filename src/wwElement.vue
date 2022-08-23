@@ -24,25 +24,25 @@ const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
 export default {
     props: {
-        uid: { type: String, required: true },
         content: { type: Object, required: true },
+        /* wwEditor:start */
+        wwEditorState: { type: Object, required: true },
+        /* wwEditor:end */
     },
     emits: ['trigger-event', 'update:content:effect'],
     setup() {
         return {
+            mapContainerId: 'ww-mapbox-' + wwLib.wwUtils.getUid(),
             map: null,
             markerInstances: [],
         };
     },
     computed: {
-        mapContainerId() {
-            return 'ww-mapbox-' + this.uid;
-        },
         mapStyle() {
             return this.content.mapStyle || this.content.styleUrl;
         },
         center() {
-            return [this.content.lng, this.content.lat];
+            return [Number(this.content.lng), Number(this.content.lat)];
         },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
@@ -62,8 +62,8 @@ export default {
                     this.content.defaultMarkerDraggable ||
                     false,
                 position: {
-                    lat: parseFloat(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
-                    lng: parseFloat(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
+                    lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
+                    lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
                 rawData: marker,
             }));
@@ -102,6 +102,39 @@ export default {
         },
     },
     watch: {
+        /* wwEditor:start */
+        'content.logoPosition'() {
+            this.loadMap();
+        },
+        'wwEditorState.boundProps.markers'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    markersContentField: null,
+                    markersLatField: null,
+                    markersLngField: null,
+                    markersColorField: null,
+                    markersDraggableField: null,
+                });
+        },
+        'wwEditorState.boundProps.sources'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    sourcesIdField: null,
+                    sourcesTypeField: null,
+                    sourcesOptionsField: null,
+                });
+        },
+        'wwEditorState.boundProps.layers'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    layersIdField: null,
+                    layersTypeField: null,
+                    layersSourceField: null,
+                    layersSourceLayerField: null,
+                    layersOptionsField: null,
+                });
+        },
+        /* wwEditor:end */
         'content.apiAccessToken'(value) {
             if (!value) return;
             this.loadMap();
@@ -110,7 +143,7 @@ export default {
             if (!this.map) return;
             this.map.setZoom(value);
         },
-        'content.projection'(value) {
+        'content.mapProjection'(value) {
             if (!this.map) return;
             this.map.setProjection(value);
         },
@@ -129,11 +162,11 @@ export default {
         markers() {
             this.loadMarkers();
         },
-        sources(...args) {
-            this.refreshSources(...args);
+        sources(newSources, oldSources) {
+            this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
         },
-        layers(...args) {
-            this.refreshLayers(...args);
+        layers(newLayers, oldLayers) {
+            this.refreshSourcesAndLayers({ newLayers, oldLayers, newSources: this.sources, oldSources: this.sources });
         },
     },
     methods: {
@@ -158,39 +191,31 @@ export default {
             this.loadMarkers();
 
             this.map.on('load', () => {
-                this.refreshSources(this.sources);
-                this.refreshLayers(this.layers);
+                this.refreshSourcesAndLayers({ newSources: this.sources, newLayers: this.layers });
             });
         },
-        refreshSources(newSources, oldSources = []) {
+        refreshSourcesAndLayers({ newSources = [], oldSources = [], newLayers = [], oldLayers = [] }) {
             if (!this.map) return;
 
             try {
-                // Clear sources
+                // We need to clear layers before sources
+                for (const layer of oldLayers) {
+                    if (!layer.id) continue;
+                    this.map.removeLayer(layer.id);
+                }
+
                 for (const source of oldSources) {
                     if (!source.id) continue;
                     this.map.removeSource(source.id);
                 }
 
+                // We need to add sources before layers
                 for (const source of newSources) {
                     if (!source.id) continue;
                     this.map.addSource(source.id, {
                         type: source.type,
                         ...(source.options ? source.options : {}),
                     });
-                }
-            } catch (error) {
-                wwLib.wwLog.warn('WW-MAPBOX FAILED TO REFRESH SOURCES', error);
-            }
-        },
-        refreshLayers(newLayers, oldLayers = []) {
-            if (!this.map) return;
-
-            try {
-                // Clear layers
-                for (const layer of oldLayers) {
-                    if (!layer.id) continue;
-                    this.map.removeLayer(layer.id);
                 }
 
                 for (const layer of newLayers) {
@@ -204,7 +229,7 @@ export default {
                     });
                 }
             } catch (error) {
-                wwLib.wwLog.warn('WW-MAPBOX FAILED TO REFRESH LAYERS', error);
+                wwLib.wwLog.warn('WW-MAPBOX FAILED TO REFRESH SOURCES AND LAYERS', error);
             }
         },
         loadMarkers() {
