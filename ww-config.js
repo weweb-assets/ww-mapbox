@@ -44,6 +44,7 @@ export default {
                 },
                 domEvent: {},
             },
+            default: true
         },
         {
             name: 'marker:mouseover',
