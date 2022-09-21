@@ -325,7 +325,20 @@ export default {
             const _layer = {...layer}
             if (!_layer.filter) delete _layer.filter
             return _layer
-        }
+        },
+        /* wwEditor:start */
+        getMarkerTestEvent() {
+            if(!this.markers.length) throw new Error('No markers found')
+            return {marker: this.markers[0]}
+        },
+        getMarkerDragTestEvent() {
+            if(!this.markers.length) throw new Error('No markers found')
+            return {marker: this.markers[0], lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },}
+        },
+        /* wwEditor:end */
     },
 };
 </script>
