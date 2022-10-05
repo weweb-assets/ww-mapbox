@@ -6,28 +6,6 @@
 import mapboxgl from 'mapbox-gl';
 import './mapbox-gl.css';
 
-const DEFAULT_MARKERS_CONTENT_FIELD = 'content';
-const DEFAULT_MARKERS_LAT_FIELD = 'lat';
-const DEFAULT_MARKERS_LNG_FIELD = 'lng';
-const DEFAULT_MARKERS_COLOR_FIELD = 'color';
-const DEFAULT_MARKERS_DRAGGABLE_FIELD = 'draggable';
-
-const DEFAULT_LAYERS_ID_FIELD = 'id';
-const DEFAULT_LAYERS_TYPE_FIELD = 'type';
-const DEFAULT_LAYERS_SOURCE_FIELD = 'source';
-const DEFAULT_LAYERS_SOURCE_LAYER_FIELD = 'sourceLayer';
-const DEFAULT_LAYERS_MINZOOM_FIELD = 'minZoom';
-const DEFAULT_LAYERS_MAXZOOM_FIELD = 'maxZoom';
-const DEFAULT_LAYERS_LAYOUT_FIELD = 'layout';
-const DEFAULT_LAYERS_PAINT_FIELD = 'paint';
-const DEFAULT_LAYERS_FILTER_FIELD = 'filter';
-const DEFAULT_LAYERS_METADATA_FIELD = 'metadata';
-
-const DEFAULT_SOURCES_ID_FIELD = 'id';
-const DEFAULT_SOURCES_TYPE_FIELD = 'type';
-const DEFAULT_SOURCES_URL_FIELD = 'url';
-const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
-
 export default {
     props: {
         content: { type: Object, required: true },
@@ -37,10 +15,12 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect'],
     setup() {
+        const { resolveMappingFormula } = wwLib.wwFormula.useFormula();
         return {
             mapContainerId: 'ww-mapbox-' + wwLib.wwUtils.getUid(),
             map: null,
             markerInstances: [],
+            resolveMappingFormula
         };
     },
     mounted() {
@@ -54,71 +34,47 @@ export default {
             return [Number(this.content.lng), Number(this.content.lat)];
         },
         markers() {
-            const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
-            const latField = this.content.markersLatField || DEFAULT_MARKERS_LAT_FIELD;
-            const lngField = this.content.markersLngField || DEFAULT_MARKERS_LNG_FIELD;
-            const colorField = this.content.markersColorField || DEFAULT_MARKERS_COLOR_FIELD;
-            const draggableField = this.content.markersDraggableField || DEFAULT_MARKERS_DRAGGABLE_FIELD;
-
             const data = wwLib.wwCollection.getCollectionData(this.content.markers);
             if (!Array.isArray(data)) return [];
 
             return data.map(marker => ({
-                content: wwLib.resolveObjectPropertyPath(marker, contentField) || '',
-                color: wwLib.resolveObjectPropertyPath(marker, colorField) || this.content.defaultMarkerColor || null,
+                content: this.resolveMappingFormula(this.content.contentField, marker, marker.content || ''),
+                color: this.resolveMappingFormula(this.content.colorField, marker, marker.color || null),
                 draggable:
-                    wwLib.resolveObjectPropertyPath(marker, draggableField) ||
-                    this.content.defaultMarkerDraggable ||
-                    false,
+                    this.resolveMappingFormula(this.content.draggableField, marker, marker.draggable || false),
                 position: {
-                    lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
-                    lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
+                    lat: Number(this.resolveMappingFormula(this.content.latField, marker, marker.lat || 0)),
+                    lng: Number(this.resolveMappingFormula(this.content.lngField, marker, marker.lng || 0)),
                 },
                 rawData: marker,
             }));
         },
         sources() {
-            const sourcesIdField = this.content.sourcesIdField || DEFAULT_SOURCES_ID_FIELD;
-            const sourcesTypeField = this.content.sourcesTypeField || DEFAULT_SOURCES_TYPE_FIELD;
-            const sourcesOptionsField = this.content.sourcesOptionsField || DEFAULT_SOURCES_OPTIONS_FIELD;
-            const sourcesUrlField = this.content.sourcesUrlField || DEFAULT_SOURCES_URL_FIELD;
-
             const data = wwLib.wwCollection.getCollectionData(this.content.sources);
             if (!Array.isArray(data)) return [];
 
             return data.map(source => ({
-                id: wwLib.resolveObjectPropertyPath(source, sourcesIdField) || '',
-                type: wwLib.resolveObjectPropertyPath(source, sourcesTypeField) || '',
-                url: wwLib.resolveObjectPropertyPath(source, sourcesUrlField) || '',
-                options: wwLib.resolveObjectPropertyPath(source, sourcesOptionsField) || {},
+                id: this.resolveMappingFormula(this.content.sourcesIdField, source, source.id || ''),
+                type: this.resolveMappingFormula(this.content.sourcesTypeField, source, source.type || ''),
+                url: this.resolveMappingFormula(this.content.sourcesUrlField, source, source.url || ''),
+                options: this.resolveMappingFormula(this.content.sourcesOptionsField, source, source.options || {}),
             }));
         },
         layers() {
-            const layersIdField = this.content.layersIdField || DEFAULT_LAYERS_ID_FIELD;
-            const layersTypeField = this.content.layersTypeField || DEFAULT_LAYERS_TYPE_FIELD;
-            const layersSourceField = this.content.layersSourceField || DEFAULT_LAYERS_SOURCE_FIELD;
-            const layersSourceLayerField = this.content.layersSourceLayerField || DEFAULT_LAYERS_SOURCE_LAYER_FIELD;
-            const layersMinZoomField = this.content.layersMinZoomField || DEFAULT_LAYERS_MINZOOM_FIELD;
-            const layersMaxZoomField = this.content.layersMaxZoomField || DEFAULT_LAYERS_MAXZOOM_FIELD;
-            const layersLayoutField = this.content.layersLayoutField || DEFAULT_LAYERS_LAYOUT_FIELD;
-            const layersPaintField = this.content.layersPaintField || DEFAULT_LAYERS_PAINT_FIELD;
-            const layersFilterField = this.content.layersFilterField || DEFAULT_LAYERS_FILTER_FIELD;
-            const layersMetadataField = this.content.layersMetadataField || DEFAULT_LAYERS_METADATA_FIELD;
-
             const data = wwLib.wwCollection.getCollectionData(this.content.layers);
             if (!Array.isArray(data)) return [];
 
             return data.map(layer => ({
-                id: wwLib.resolveObjectPropertyPath(layer, layersIdField) || '',
-                type: wwLib.resolveObjectPropertyPath(layer, layersTypeField) || '',
-                source: wwLib.resolveObjectPropertyPath(layer, layersSourceField) || '',
-                sourceLayer: wwLib.resolveObjectPropertyPath(layer, layersSourceLayerField) || '',
-                minzoom: wwLib.resolveObjectPropertyPath(layer, layersMinZoomField) || 0,
-                maxzoom: wwLib.resolveObjectPropertyPath(layer, layersMaxZoomField) || 24,
-                layout: wwLib.resolveObjectPropertyPath(layer, layersLayoutField) || {},
-                paint: wwLib.resolveObjectPropertyPath(layer, layersPaintField) || {},
-                filter: wwLib.resolveObjectPropertyPath(layer, layersFilterField) || null,
-                metadata: wwLib.resolveObjectPropertyPath(layer, layersMetadataField) || null,
+                id: this.resolveMappingFormula(this.content.layersIdField, layer, layer.id || ''),
+                type: this.resolveMappingFormula(this.content.layersTypeField, layer, layer.type || ''),
+                source: this.resolveMappingFormula(this.content.layersSourceField, layer, layer.source || ''),
+                sourceLayer: this.resolveMappingFormula(this.content.layersSourceLayerField, layer, layer.sourceLayer || ''),
+                minzoom: this.resolveMappingFormula(this.content.layersMinZoomField, layer, layer.minZoom || 0),
+                maxzoom: this.resolveMappingFormula(this.content.layersMaxZoomField, layer, layer.maxZoom || 24),
+                layout: this.resolveMappingFormula(this.content.layersLayoutField, layer, layer.layout || {}),
+                paint: this.resolveMappingFormula(this.content.layersPaintField, layer, layer.paint || {}),
+                filter: this.resolveMappingFormula(this.content.layersFilterField, layer, layer.filter || null),
+                metadata: this.resolveMappingFormula(this.content.layersMetadataField, layer, layer.metadata || null),
             }));
         },
     },

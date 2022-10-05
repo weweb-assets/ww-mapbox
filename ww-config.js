@@ -424,14 +424,8 @@ export default {
                 en: 'Marker content',
                 fr: 'Marker content',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.markers.length || typeof content.markers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.markers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.markers.length ? content.markers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -441,14 +435,8 @@ export default {
                 en: 'Marker lat. field',
                 fr: 'Marker lat. field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.markers.length || typeof content.markers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.markers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.markers.length ? content.markers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -458,14 +446,8 @@ export default {
                 en: 'Marker long. field',
                 fr: 'Marker long. field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.markers.length || typeof content.markers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.markers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.markers.length ? content.markers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -475,14 +457,8 @@ export default {
                 en: 'Marker color',
                 fr: 'Marker color',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.markers.length || typeof content.markers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.markers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.markers.length ? content.markers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -492,14 +468,8 @@ export default {
                 en: 'Marker draggable',
                 fr: 'Marker draggable',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.markers.length || typeof content.markers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.markers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.markers.length ? content.markers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -653,14 +623,8 @@ export default {
                 en: 'Id field',
                 fr: 'Id field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -670,14 +634,8 @@ export default {
                 en: 'Type field',
                 fr: 'Type field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -687,14 +645,8 @@ export default {
                 en: 'Source field',
                 fr: 'Source field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -704,14 +656,8 @@ export default {
                 en: 'Source layer field',
                 fr: 'Source layer field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -721,14 +667,8 @@ export default {
                 en: 'Metadata field',
                 fr: 'Metadata field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -738,14 +678,8 @@ export default {
                 en: 'Layout field',
                 fr: 'Layout field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -755,14 +689,8 @@ export default {
                 en: 'Paint field',
                 fr: 'Paint field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -772,14 +700,8 @@ export default {
                 en: 'Filter field',
                 fr: 'Filter field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -789,14 +711,8 @@ export default {
                 en: 'Max zoom field',
                 fr: 'Max zoom field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -806,14 +722,8 @@ export default {
                 en: 'Min zoom field',
                 fr: 'Min zoom field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.layers.length || typeof content.layers[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.layers[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.layers.length ? content.layers[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -890,14 +800,8 @@ export default {
                 en: 'Id field',
                 fr: 'Id field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.sources.length || typeof content.sources[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.sources[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.sources.length ? content.sources[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -907,14 +811,8 @@ export default {
                 en: 'Type field',
                 fr: 'Type field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.sources.length || typeof content.sources[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.sources[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.sources.length ? content.sources[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -924,14 +822,8 @@ export default {
                 en: 'Url field',
                 fr: 'Url field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.sources.length || typeof content.sources[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.sources[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.sources.length ? content.sources[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
@@ -941,14 +833,8 @@ export default {
                 en: 'Advanced Opt. field',
                 fr: 'Advanced Opt. field',
             },
-            type: 'ObjectPropertyPath',
-            options: content => {
-                if (!content.sources.length || typeof content.sources[0] !== 'object') {
-                    return null;
-                }
-
-                return { object: content.sources[0] };
-            },
+            type: 'Formula',
+            options: content => ({ template: content.sources.length ? content.sources[0] : null }),
             defaultValue: null,
             section: 'settings',
         },
