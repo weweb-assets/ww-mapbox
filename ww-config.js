@@ -65,6 +65,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:mouseout',
@@ -79,6 +80,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:click',
@@ -93,6 +95,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:dragstart',
@@ -111,6 +114,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
         {
             name: 'marker:drag',
@@ -129,6 +133,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
         {
             name: 'marker:dragend',
@@ -147,6 +152,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
     ],
     properties: {
