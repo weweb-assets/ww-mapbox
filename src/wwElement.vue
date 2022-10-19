@@ -215,11 +215,11 @@ export default {
                     draggable: marker.draggable,
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
-                    .setPopup(new mapboxgl.Popup().setHTML(marker.content))
+                    .setPopup(marker.content ? new mapboxgl.Popup().setHTML(marker.content) : null)
                     .addTo(this.map);
-                _marker.getElement().addEventListener('click', () => this.handleMarkerClick(marker));
-                _marker.getElement().addEventListener('mouseover', () => this.handleMarkerClick(marker));
-                _marker.getElement().addEventListener('mouseout', () => this.handleMarkerClick(marker));
+                _marker.getElement().addEventListener('click', event => this.handleMarkerClick(marker, event));
+                _marker.getElement().addEventListener('mouseover', event => this.handleMarkerMouseover(marker, event));
+                _marker.getElement().addEventListener('mouseout', event => this.handleMarkerMouseout(marker, event));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
@@ -240,28 +240,28 @@ export default {
 
             this.map.fitBounds(bounds, { padding: 20 });
         },
-        handleMarkerClick(marker) {
+        handleMarkerClick(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:click',
-                event: { marker },
+                event: { marker, domEvent: event.originalEvent },
             });
         },
-        handleMarkerMouseover(marker) {
+        handleMarkerMouseover(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseover',
-                event: { marker },
+                event: { marker, domEvent: event.originalEvent },
             });
         },
-        handleMarkerMouseout(marker) {
+        handleMarkerMouseout(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseout',
-                event: { marker },
+                event: { marker, domEvent: event.originalEvent },
             });
         },
         handleMarkerDrag(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:' + event.type,
-                event: { marker, lngLat: event.target._lngLat },
+                event: { marker, lngLat: event.target._lngLat, domEvent: event.originalEvent },
             });
         },
         handleMapClick(event) {
@@ -285,14 +285,18 @@ export default {
         /* wwEditor:start */
         getMarkerTestEvent() {
             if(!this.markers.length) throw new Error('No markers found')
-            return {marker: this.markers[0]}
+            return {marker: this.markers[0], domEvent: { x: 128, y: 156, target: null },}
         },
         getMarkerDragTestEvent() {
             if(!this.markers.length) throw new Error('No markers found')
-            return {marker: this.markers[0], lngLat: {
+            return {
+                marker: this.markers[0],
+                lngLat: {
                     lat: 48.84872727506581,
                     lng: 2.351657694024656,
-                },}
+                },
+                domEvent: { x: 128, y: 156, target: null },
+            }
         },
         /* wwEditor:end */
     },
