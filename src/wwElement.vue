@@ -16,10 +16,16 @@ const DEFAULT_LAYERS_ID_FIELD = 'id';
 const DEFAULT_LAYERS_TYPE_FIELD = 'type';
 const DEFAULT_LAYERS_SOURCE_FIELD = 'source';
 const DEFAULT_LAYERS_SOURCE_LAYER_FIELD = 'sourceLayer';
-const DEFAULT_LAYERS_OPTIONS_FIELD = 'options';
+const DEFAULT_LAYERS_MINZOOM_FIELD = 'minZoom';
+const DEFAULT_LAYERS_MAXZOOM_FIELD = 'maxZoom';
+const DEFAULT_LAYERS_LAYOUT_FIELD = 'layout';
+const DEFAULT_LAYERS_PAINT_FIELD = 'paint';
+const DEFAULT_LAYERS_FILTER_FIELD = 'filter';
+const DEFAULT_LAYERS_METADATA_FIELD = 'metadata';
 
 const DEFAULT_SOURCES_ID_FIELD = 'id';
 const DEFAULT_SOURCES_TYPE_FIELD = 'type';
+const DEFAULT_SOURCES_URL_FIELD = 'url';
 const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
 export default {
@@ -36,6 +42,9 @@ export default {
             map: null,
             markerInstances: [],
         };
+    },
+    mounted() {
+        this.loadMap()
     },
     computed: {
         mapStyle() {
@@ -72,6 +81,7 @@ export default {
             const sourcesIdField = this.content.sourcesIdField || DEFAULT_SOURCES_ID_FIELD;
             const sourcesTypeField = this.content.sourcesTypeField || DEFAULT_SOURCES_TYPE_FIELD;
             const sourcesOptionsField = this.content.sourcesOptionsField || DEFAULT_SOURCES_OPTIONS_FIELD;
+            const sourcesUrlField = this.content.sourcesUrlField || DEFAULT_SOURCES_URL_FIELD;
 
             const data = wwLib.wwCollection.getCollectionData(this.content.sources);
             if (!Array.isArray(data)) return [];
@@ -79,6 +89,7 @@ export default {
             return data.map(source => ({
                 id: wwLib.resolveObjectPropertyPath(source, sourcesIdField) || '',
                 type: wwLib.resolveObjectPropertyPath(source, sourcesTypeField) || '',
+                url: wwLib.resolveObjectPropertyPath(source, sourcesUrlField) || '',
                 options: wwLib.resolveObjectPropertyPath(source, sourcesOptionsField) || {},
             }));
         },
@@ -87,7 +98,12 @@ export default {
             const layersTypeField = this.content.layersTypeField || DEFAULT_LAYERS_TYPE_FIELD;
             const layersSourceField = this.content.layersSourceField || DEFAULT_LAYERS_SOURCE_FIELD;
             const layersSourceLayerField = this.content.layersSourceLayerField || DEFAULT_LAYERS_SOURCE_LAYER_FIELD;
-            const layersOptionsField = this.content.layersOptionsField || DEFAULT_LAYERS_OPTIONS_FIELD;
+            const layersMinZoomField = this.content.layersMinZoomField || DEFAULT_LAYERS_MINZOOM_FIELD;
+            const layersMaxZoomField = this.content.layersMaxZoomField || DEFAULT_LAYERS_MAXZOOM_FIELD;
+            const layersLayoutField = this.content.layersLayoutField || DEFAULT_LAYERS_LAYOUT_FIELD;
+            const layersPaintField = this.content.layersPaintField || DEFAULT_LAYERS_PAINT_FIELD;
+            const layersFilterField = this.content.layersFilterField || DEFAULT_LAYERS_FILTER_FIELD;
+            const layersMetadataField = this.content.layersMetadataField || DEFAULT_LAYERS_METADATA_FIELD;
 
             const data = wwLib.wwCollection.getCollectionData(this.content.layers);
             if (!Array.isArray(data)) return [];
@@ -97,7 +113,12 @@ export default {
                 type: wwLib.resolveObjectPropertyPath(layer, layersTypeField) || '',
                 source: wwLib.resolveObjectPropertyPath(layer, layersSourceField) || '',
                 sourceLayer: wwLib.resolveObjectPropertyPath(layer, layersSourceLayerField) || '',
-                options: wwLib.resolveObjectPropertyPath(layer, layersOptionsField) || {},
+                minzoom: wwLib.resolveObjectPropertyPath(layer, layersMinZoomField) || 0,
+                maxzoom: wwLib.resolveObjectPropertyPath(layer, layersMaxZoomField) || 24,
+                layout: wwLib.resolveObjectPropertyPath(layer, layersLayoutField) || {},
+                paint: wwLib.resolveObjectPropertyPath(layer, layersPaintField) || {},
+                filter: wwLib.resolveObjectPropertyPath(layer, layersFilterField) || null,
+                metadata: wwLib.resolveObjectPropertyPath(layer, layersMetadataField) || null,
             }));
         },
     },
@@ -171,6 +192,7 @@ export default {
     },
     methods: {
         loadMap() {
+            if (!this.content.apiAccessToken) return
             mapboxgl.accessToken = this.content.apiAccessToken;
             document.getElementById(this.mapContainerId).innerHTML = '';
             this.map = new mapboxgl.Map({
@@ -200,33 +222,24 @@ export default {
             try {
                 // We need to clear layers before sources
                 for (const layer of oldLayers) {
-                    if (!layer.id) continue;
+                    if (!layer.id || !this.map.getLayer(layer.id)) continue;
                     this.map.removeLayer(layer.id);
                 }
 
                 for (const source of oldSources) {
-                    if (!source.id) continue;
+                    if (!source.id || !this.map.getSource(source.id)) continue;
                     this.map.removeSource(source.id);
                 }
 
                 // We need to add sources before layers
                 for (const source of newSources) {
                     if (!source.id) continue;
-                    this.map.addSource(source.id, {
-                        type: source.type,
-                        ...(source.options ? source.options : {}),
-                    });
+                    this.map.addSource(source.id, this.formatSource(source));
                 }
 
                 for (const layer of newLayers) {
                     if (!layer.id) continue;
-                    this.map.addLayer({
-                        id: layer.id,
-                        type: layer.type,
-                        source: layer.source,
-                        'source-layer': layer.sourceLayer,
-                        ...(layer.options ? layer.options : {}),
-                    });
+                    this.map.addLayer(this.formatLayer(layer));
                 }
             } catch (error) {
                 wwLib.wwLog.warn('WW-MAPBOX FAILED TO REFRESH SOURCES AND LAYERS', error);
@@ -301,6 +314,31 @@ export default {
                 event: { ...event, domEvent: event.originalEvent },
             });
         },
+        formatSource(source) {
+            const _source = {...source, ...(source.options || null)}
+            delete _source.id
+            delete _source.options
+            if(['geojson', 'video'].includes(_source.type)) delete _source.url
+            return _source
+        },
+        formatLayer(layer) {
+            const _layer = {...layer}
+            if (!_layer.filter) delete _layer.filter
+            return _layer
+        },
+        /* wwEditor:start */
+        getMarkerTestEvent() {
+            if(!this.markers.length) throw new Error('No markers found')
+            return {marker: this.markers[0]}
+        },
+        getMarkerDragTestEvent() {
+            if(!this.markers.length) throw new Error('No markers found')
+            return {marker: this.markers[0], lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },}
+        },
+        /* wwEditor:end */
     },
 };
 </script>

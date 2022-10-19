@@ -7,6 +7,7 @@ export default {
         customSettingsPropertiesOrder: [
             'apiAccessToken',
             ['lat', 'lng', 'zoom'],
+            ['scrollZoom', 'trackResize', 'defaultMarkerDraggable', 'fixedBounds'],
             [
                 'markers',
                 'markersHintFields',
@@ -16,7 +17,8 @@ export default {
                 'markersColorField',
                 'markersDraggableField',
             ],
-            ['sources', 'sourcesHintFields', 'sourcesIdField', 'sourcesTypeField', 'sourcesOptionsField'],
+            'advancedOptions',
+            ['sources', 'sourcesHintFields', 'sourcesIdField', 'sourcesTypeField', 'sourcesUrlField', 'sourcesOptionsField'],
             [
                 'layers',
                 'layersHintFields',
@@ -24,9 +26,13 @@ export default {
                 'layersTypeField',
                 'layersSourceField',
                 'layersSourceLayerField',
-                'layersOptionsField',
+                'layersMinZoomField',
+                'layersMaxZoomField',
+                'layersLayoutField',
+                'layersPaintField',
+                'layersFilterField',
+                'layersMetadataField',
             ],
-            ['scrollZoom', 'trackResize', 'defaultMarkerDraggable', 'fixedBounds'],
         ],
     },
     triggerEvents: [
@@ -59,6 +65,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:mouseout',
@@ -73,6 +80,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:click',
@@ -87,6 +95,7 @@ export default {
                     rawData: {},
                 },
             },
+            getTestEvent: 'getMarkerTestEvent'
         },
         {
             name: 'marker:dragstart',
@@ -105,6 +114,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
         {
             name: 'marker:drag',
@@ -123,6 +133,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
         {
             name: 'marker:dragend',
@@ -141,6 +152,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
+            getTestEvent: 'getMarkerDragTestEvent'
         },
     ],
     properties: {
@@ -491,6 +503,18 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
+        advancedOptions: {
+            label: {
+                en: 'Advanced',
+                fr: 'Avancées',
+            },
+            type: 'Info',
+            options: {
+                text: { en: 'Read the mapbox-gl-js documentation to use custom sources & layers' },
+            },
+            editorOnly: true,
+            section: 'settings',
+        },
         layers: {
             section: 'settings',
             label: { en: 'Layers', fr: 'Layers' },
@@ -509,14 +533,19 @@ export default {
                         type: '',
                         source: null,
                         sourceLayer: '',
-                        options: {},
+                        metadata: null,
+                        layout: null,
+                        paint: null,
+                        minZoom: 0,
+                        maxZoom: 24,
+                        filter: null
                     },
                     options: {
                         item: {
                             id: {
                                 label: { en: 'Unique Id' },
                                 type: 'Text',
-                                options: { placeholder: 'Id' },
+                                options: { placeholder: 'my-layer-id' },
                                 bindable: true,
                             },
                             type: {
@@ -557,8 +586,45 @@ export default {
                                 options: { placeholder: 'Source layer' },
                                 bindable: true,
                             },
-                            options: {
-                                label: { en: 'Options' },
+                            minZoom: {
+                                type: 'Number',
+                                label: { en: 'Min zoom', fr: 'Min zoom' },
+                                options: {
+                                    min: 0,
+                                    max: 24,
+                                    step: 1,
+                                },
+                                defaultValue: 0,
+                                bindable: true,
+                            },
+                            maxZoom: {
+                                type: 'Number',
+                                label: { en: 'Max zoom', fr: 'Max zoom' },
+                                options: {
+                                    min: 0,
+                                    max: 24,
+                                    step: 1,
+                                },
+                                defaultValue: 24,
+                                bindable: true,
+                            },
+                            metadata: {
+                                label: { en: 'Metadata' },
+                                type: 'Info',
+                                bindable: true,
+                            },
+                            layout: {
+                                label: { en: 'Layout' },
+                                type: 'Info',
+                                bindable: true,
+                            },
+                            paint: {
+                                label: { en: 'Paint' },
+                                type: 'Info',
+                                bindable: true,
+                            },
+                            filter: {
+                                label: { en: 'Filter' },
                                 type: 'Info',
                                 bindable: true,
                             },
@@ -649,11 +715,96 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
-        layersOptionsField: {
+        layersMetadataField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
             label: {
-                en: 'Options field',
-                fr: 'Options field',
+                en: 'Metadata field',
+                fr: 'Metadata field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.layers.length || typeof content.layers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.layers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        layersLayoutField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
+            label: {
+                en: 'Layout field',
+                fr: 'Layout field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.layers.length || typeof content.layers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.layers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        layersPaintField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
+            label: {
+                en: 'Paint field',
+                fr: 'Paint field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.layers.length || typeof content.layers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.layers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        layersFilterField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
+            label: {
+                en: 'Filter field',
+                fr: 'Filter field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.layers.length || typeof content.layers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.layers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        layersMaxZoomField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
+            label: {
+                en: 'Max zoom field',
+                fr: 'Max zoom field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.layers.length || typeof content.layers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.layers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        layersMinZoomField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.layers || !content.layers,
+            label: {
+                en: 'Min zoom field',
+                fr: 'Min zoom field',
             },
             type: 'ObjectPropertyPath',
             options: content => {
@@ -703,8 +854,14 @@ export default {
                                 },
                                 bindable: true,
                             },
+                            url: {
+                                label: { en: 'Url (Tileset)' },
+                                type: 'Text',
+                                options: { placeholder: 'mapbox://mapbox.mapbox-streets-v6' },
+                                bindable: true,
+                            },
                             options: {
-                                label: { en: 'Options' },
+                                label: { en: 'Advanced options' },
                                 type: 'Info',
                                 bindable: true,
                             },
@@ -761,11 +918,28 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
+        sourcesUrlField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.sources || !content.sources,
+            label: {
+                en: 'Url field',
+                fr: 'Url field',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.sources.length || typeof content.sources[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.sources[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
         sourcesOptionsField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.sources || !content.sources,
             label: {
-                en: 'Options field',
-                fr: 'Options field',
+                en: 'Advanced Opt. field',
+                fr: 'Advanced Opt. field',
             },
             type: 'ObjectPropertyPath',
             options: content => {
