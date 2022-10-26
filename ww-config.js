@@ -3,7 +3,7 @@ export default {
         label: {
             en: 'Mapbox',
         },
-        icon: 'tracking',
+        icon: 'map',
         customSettingsPropertiesOrder: [
             'apiAccessToken',
             ['lat', 'lng', 'zoom'],
