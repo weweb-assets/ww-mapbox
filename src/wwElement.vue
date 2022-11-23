@@ -1,5 +1,20 @@
 <template>
-    <div :id="mapContainerId"></div>
+    <div v-if="!content.apiAccessToken.length" class="map-placeholder">
+        <div class="placeholder-content">
+            If you want to use a Mapbox map, you need a valid API access token. If you already have one, you can add it
+            in the map settings. <br /><br />
+            Otherwise you can find the token on your mapbox account page:
+            <a href="https://account.mapbox.com/" target="_blank">
+                <button>Mapbox account</button>
+            </a>
+        </div>
+    </div>
+    <div v-else-if="error" class="map-placeholder">
+        <div class="placeholder-content">
+            {{ error }}
+        </div>
+    </div>
+    <div v-else :id="mapContainerId" :key="componentKey"></div>
 </template>
 
 <script>
@@ -41,10 +56,16 @@ export default {
             mapContainerId: 'ww-mapbox-' + wwLib.wwUtils.getUid(),
             map: null,
             markerInstances: [],
+            componentKey: 0,
+        };
+    },
+    data() {
+        return {
+            error: '',
         };
     },
     mounted() {
-        this.loadMap()
+        this.loadMap();
     },
     computed: {
         mapStyle() {
@@ -158,7 +179,11 @@ export default {
         /* wwEditor:end */
         'content.apiAccessToken'(value) {
             if (!value) return;
-            this.loadMap();
+
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.loadMap();
+            });
         },
         'content.zoom'(value) {
             if (!this.map) return;
@@ -192,7 +217,8 @@ export default {
     },
     methods: {
         loadMap() {
-            if (!this.content.apiAccessToken) return
+            this.error = '';
+            if (!this.content.apiAccessToken) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
             document.getElementById(this.mapContainerId).innerHTML = '';
             this.map = new mapboxgl.Map({
@@ -214,6 +240,9 @@ export default {
 
             this.map.on('load', () => {
                 this.refreshSourcesAndLayers({ newSources: this.sources, newLayers: this.layers });
+            });
+            this.map.on('error', event => {
+                this.error = event.error;
             });
         },
         refreshSourcesAndLayers({ newSources = [], oldSources = [], newLayers = [], oldLayers = [] }) {
@@ -315,30 +344,85 @@ export default {
             });
         },
         formatSource(source) {
-            const _source = {...source, ...(source.options || null)}
-            delete _source.id
-            delete _source.options
-            if(['geojson', 'video'].includes(_source.type)) delete _source.url
-            return _source
+            const _source = { ...source, ...(source.options || null) };
+            delete _source.id;
+            delete _source.options;
+            if (['geojson', 'video'].includes(_source.type)) delete _source.url;
+            return _source;
         },
         formatLayer(layer) {
-            const _layer = {...layer}
-            if (!_layer.filter) delete _layer.filter
-            return _layer
+            const _layer = { ...layer };
+            if (!_layer.filter) delete _layer.filter;
+            return _layer;
         },
         /* wwEditor:start */
         getMarkerTestEvent() {
-            if(!this.markers.length) throw new Error('No markers found')
-            return {marker: this.markers[0]}
+            if (!this.markers.length) throw new Error('No markers found');
+            return { marker: this.markers[0] };
         },
         getMarkerDragTestEvent() {
-            if(!this.markers.length) throw new Error('No markers found')
-            return {marker: this.markers[0], lngLat: {
+            if (!this.markers.length) throw new Error('No markers found');
+            return {
+                marker: this.markers[0],
+                lngLat: {
                     lat: 48.84872727506581,
                     lng: 2.351657694024656,
-                },}
+                },
+            };
         },
         /* wwEditor:end */
     },
 };
 </script>
+
+<style scoped>
+.map-placeholder {
+    overflow: hidden;
+    z-index: 2;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+
+    .placeholder-content {
+        text-align: center;
+        width: 90%;
+        background: white;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 0.8em 1.2em;
+        border-radius: 12px;
+
+        .wrongKey {
+            color: #f44336;
+            padding: 10px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 0.8em 1.2em;
+            border: none;
+            border-radius: 12px;
+            background-color: #099af2;
+            color: white;
+            font-weight: 500;
+            font-size: 1.1em;
+            transition: 0.3s;
+
+            &:hover {
+                cursor: pointer;
+                background-color: #077ac0;
+                transition: 0.3s;
+            }
+        }
+    }
+}
+</style>
