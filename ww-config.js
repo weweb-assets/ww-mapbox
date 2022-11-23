@@ -18,7 +18,14 @@ export default {
                 'markersDraggableField',
             ],
             'advancedOptions',
-            ['sources', 'sourcesHintFields', 'sourcesIdField', 'sourcesTypeField', 'sourcesUrlField', 'sourcesOptionsField'],
+            [
+                'sources',
+                'sourcesHintFields',
+                'sourcesIdField',
+                'sourcesTypeField',
+                'sourcesUrlField',
+                'sourcesOptionsField',
+            ],
             [
                 'layers',
                 'layersHintFields',
@@ -50,7 +57,7 @@ export default {
                 },
                 domEvent: {},
             },
-            default: true
+            default: true,
         },
         {
             name: 'marker:mouseover',
@@ -65,7 +72,7 @@ export default {
                     rawData: {},
                 },
             },
-            getTestEvent: 'getMarkerTestEvent'
+            getTestEvent: 'getMarkerTestEvent',
         },
         {
             name: 'marker:mouseout',
@@ -80,7 +87,7 @@ export default {
                     rawData: {},
                 },
             },
-            getTestEvent: 'getMarkerTestEvent'
+            getTestEvent: 'getMarkerTestEvent',
         },
         {
             name: 'marker:click',
@@ -95,7 +102,7 @@ export default {
                     rawData: {},
                 },
             },
-            getTestEvent: 'getMarkerTestEvent'
+            getTestEvent: 'getMarkerTestEvent',
         },
         {
             name: 'marker:dragstart',
@@ -114,7 +121,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
-            getTestEvent: 'getMarkerDragTestEvent'
+            getTestEvent: 'getMarkerDragTestEvent',
         },
         {
             name: 'marker:drag',
@@ -133,7 +140,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
-            getTestEvent: 'getMarkerDragTestEvent'
+            getTestEvent: 'getMarkerDragTestEvent',
         },
         {
             name: 'marker:dragend',
@@ -152,7 +159,7 @@ export default {
                     lng: 2.351657694024656,
                 },
             },
-            getTestEvent: 'getMarkerDragTestEvent'
+            getTestEvent: 'getMarkerDragTestEvent',
         },
     ],
     properties: {
@@ -538,7 +545,7 @@ export default {
                         paint: null,
                         minZoom: 0,
                         maxZoom: 24,
-                        filter: null
+                        filter: null,
                     },
                     options: {
                         item: {
