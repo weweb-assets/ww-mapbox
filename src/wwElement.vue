@@ -65,6 +65,8 @@ export default {
         };
     },
     mounted() {
+        if (window.__WW_IS_PRERENDER__) return;
+
         this.loadMap();
     },
     computed: {
