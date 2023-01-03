@@ -14,7 +14,7 @@
             {{ error }}
         </div>
     </div>
-    <div v-else :id="mapContainerId" :key="componentKey"></div>
+    <div v-else ref="mapContainer" :key="componentKey"></div>
 </template>
 
 <script>
@@ -53,7 +53,6 @@ export default {
     emits: ['trigger-event', 'update:content:effect'],
     setup() {
         return {
-            mapContainerId: '',
             map: null,
             markerInstances: [],
             componentKey: 0,
@@ -66,12 +65,8 @@ export default {
     },
     mounted() {
         if (window.__WW_IS_PRERENDER__) return;
-        else {
-            setTimeout(() => {
-                this.mapContainerId = 'ww-mapbox-' + wwLib.wwUtils.getUid()
-                this.loadMap();
-            }, 1);
-        }
+
+        this.loadMap();
 
     },
     computed: {
@@ -226,10 +221,11 @@ export default {
         loadMap() {
             this.error = '';
             if (!this.content.apiAccessToken) return;
+            if (!this.$refs.mapContainer) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
-            document.getElementById(this.mapContainerId).innerHTML = '';
+            this.$refs.mapContainer.innerHTML = '';
             this.map = new mapboxgl.Map({
-                container: this.mapContainerId,
+                container: this.$refs.mapContainer,
                 style: this.mapStyle,
                 center: this.center,
                 zoom: this.content.zoom,
