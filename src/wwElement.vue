@@ -53,7 +53,6 @@ export default {
     emits: ['trigger-event', 'update:content:effect'],
     setup() {
         return {
-            mapContainerId: 'ww-mapbox-' + wwLib.wwUtils.getUid(),
             map: null,
             markerInstances: [],
             componentKey: 0,
@@ -61,11 +60,16 @@ export default {
     },
     data() {
         return {
+            mapContainerId: '',
             error: '',
         };
     },
     mounted() {
-        this.loadMap();
+        this.mapContainerId = this.$el.id && this.$el.id!= '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid()
+
+        if (window.__WW_IS_PRERENDER__) return;
+
+        setTimeout(this.loadMap, 1);
     },
     computed: {
         mapStyle() {
