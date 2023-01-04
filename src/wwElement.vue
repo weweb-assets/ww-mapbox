@@ -65,7 +65,11 @@ export default {
         };
     },
     mounted() {
-        this.mapContainerId = this.$el.id || this.mapContainerId || 'ww-mapbox-' + wwLib.wwUtils.getUid()
+        this.mapContainerId = this.$el.id && this.$el.id!= '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid()
+
+        console.log("this.$el.id", this.$el.id)
+        console.log("!!this.$el.id", !!this.$el.id)
+        console.log("this.mapContainerId", this.mapContainerId)
 
         if (window.__WW_IS_PRERENDER__) return;
 
