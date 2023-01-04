@@ -14,7 +14,7 @@
             {{ error }}
         </div>
     </div>
-    <div v-else ref="mapContainer" :key="componentKey"></div>
+    <div v-else :id="mapContainerId" :key="componentKey"></div>
 </template>
 
 <script>
@@ -60,14 +60,16 @@ export default {
     },
     data() {
         return {
+            mapContainerId: '',
             error: '',
         };
     },
     mounted() {
+        this.mapContainerId = this.$el.id || this.mapContainerId || 'ww-mapbox-' + wwLib.wwUtils.getUid()
+
         if (window.__WW_IS_PRERENDER__) return;
 
         this.loadMap();
-
     },
     computed: {
         mapStyle() {
@@ -221,11 +223,10 @@ export default {
         loadMap() {
             this.error = '';
             if (!this.content.apiAccessToken) return;
-            if (!this.$refs.mapContainer) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
-            this.$refs.mapContainer.innerHTML = '';
+            document.getElementById(this.mapContainerId).innerHTML = '';
             this.map = new mapboxgl.Map({
-                container: this.$refs.mapContainer,
+                container: this.mapContainerId,
                 style: this.mapStyle,
                 center: this.center,
                 zoom: this.content.zoom,
