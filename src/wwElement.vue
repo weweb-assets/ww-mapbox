@@ -67,10 +67,6 @@ export default {
     mounted() {
         this.mapContainerId = this.$el.id && this.$el.id!= '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid()
 
-        console.log("this.$el.id", this.$el.id)
-        console.log("!!this.$el.id", !!this.$el.id)
-        console.log("this.mapContainerId", this.mapContainerId)
-
         if (window.__WW_IS_PRERENDER__) return;
 
         setTimeout(this.loadMap, 1);
