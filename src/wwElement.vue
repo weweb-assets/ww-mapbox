@@ -73,7 +73,7 @@ export default {
 
         if (window.__WW_IS_PRERENDER__) return;
 
-        this.loadMap();
+        setTimeout(this.loadMap, 1);
     },
     computed: {
         mapStyle() {
