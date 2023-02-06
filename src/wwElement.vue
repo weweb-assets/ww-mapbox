@@ -76,7 +76,9 @@ export default {
             return this.content.mapStyle || this.content.styleUrl;
         },
         center() {
-            return [Number(this.content.lng), Number(this.content.lat)];
+            const lng = Number(this.content.lng)
+            const lat = Number(this.content.lat)
+            return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
         },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
