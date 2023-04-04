@@ -254,7 +254,10 @@ export default {
                 this.error = event.error;
             });
 
-            this.resizeObserver = new ResizeObserver(() => this.map && this.map.resize && this.map.resize());
+            this.resizeObserver = new ResizeObserver(() => {
+                this.map && this.map.resize && this.map.resize();
+                if (this.content.fixedBounds) this.fitMarkersBounds();
+            });
             this.resizeObserver.observe(mapEl)
 
         },
