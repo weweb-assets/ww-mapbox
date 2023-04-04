@@ -14,7 +14,7 @@
             {{ error }}
         </div>
     </div>
-    <div v-else ref="mapEl" :id="mapContainerId" :key="componentKey"></div>
+    <div v-else :id="mapContainerId" :key="componentKey"></div>
 </template>
 
 <script>
@@ -227,8 +227,9 @@ export default {
             this.error = '';
             if (!this.content.apiAccessToken) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
-            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(this.$refs.mapEl)
-            document.getElementById(this.mapContainerId).innerHTML = '';
+            const mapEl = document.getElementById(this.mapContainerId)
+            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl)
+            if (mapEl) mapEl.innerHTML = '';
             this.map = new mapboxgl.Map({
                 container: this.mapContainerId,
                 style: this.mapStyle,
@@ -254,7 +255,7 @@ export default {
             });
 
             this.resizeObserver = new ResizeObserver(() => this.map && this.map.resize && this.map.resize());
-            this.resizeObserver.observe(this.$refs.mapEl)
+            this.resizeObserver.observe(mapEl)
 
         },
         refreshSourcesAndLayers({ newSources = [], oldSources = [], newLayers = [], oldLayers = [] }) {
