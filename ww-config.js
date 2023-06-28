@@ -258,9 +258,6 @@ export default {
                 ],
             },
             defaultValue: 'bottom-left',
-            states: true,
-            classes: true,
-            responsive: true,
         },
         defaultMarkerColor: {
             label: {
