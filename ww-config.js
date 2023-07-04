@@ -202,6 +202,9 @@ export default {
             },
             defaultValue: 'mapbox://styles/mapbox/streets-v11',
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         styleUrl: {
             hidden: content => !!content.mapStyle,
@@ -212,6 +215,9 @@ export default {
             },
             defaultValue: '',
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         mapProjection: {
             label: {
@@ -233,6 +239,9 @@ export default {
             },
             defaultValue: 'globe',
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         logoPosition: {
             label: {
@@ -258,6 +267,9 @@ export default {
             type: 'Color',
             defaultValue: '#F23636',
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         apiAccessToken: {
             section: 'settings',
@@ -301,6 +313,9 @@ export default {
             },
             defaultValue: 9,
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         scrollZoom: {
             section: 'settings',
