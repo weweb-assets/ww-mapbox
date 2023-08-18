@@ -245,6 +245,9 @@ export default {
                 this.map.setFog({}); // Set the default atmosphere style
             });
             this.map.on('click', this.handleMapClick);
+            this.map.on('movestart', this.handleMapMove);
+            this.map.on('move', this.handleMapMove);
+            this.map.on('moveend', this.handleMapMove);
             this.loadMarkers();
 
             this.map.on('load', () => {
@@ -306,9 +309,9 @@ export default {
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
                 if (marker.content) _marker.setPopup(new mapboxgl.Popup().setHTML(marker.content))
-                _marker.getElement().addEventListener('click', () => this.handleMarkerClick(marker));
-                _marker.getElement().addEventListener('mouseover', () => this.handleMarkerMouseover(marker));
-                _marker.getElement().addEventListener('mouseout', () => this.handleMarkerMouseout(marker));
+                _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
+                _marker.getElement().addEventListener('mouseover', (e) => this.handleMarkerMouseover(marker, e));
+                _marker.getElement().addEventListener('mouseout', (e) => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
@@ -329,28 +332,34 @@ export default {
 
             this.map.fitBounds(bounds, { padding: 20 });
         },
-        handleMarkerClick(marker) {
+        handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:click',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
-        handleMarkerMouseover(marker) {
+        handleMarkerMouseover(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseover',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
-        handleMarkerMouseout(marker) {
+        handleMarkerMouseout(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseout',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
         handleMarkerDrag(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:' + event.type,
                 event: { marker, lngLat: event.target._lngLat },
+            });
+        },
+        handleMapMove(event) {
+            this.$emit('trigger-event', {
+                name: 'map:' + event.type,
+                event: { ...event },
             });
         },
         handleMapClick(event) {
