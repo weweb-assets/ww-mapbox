@@ -246,7 +246,6 @@ export default {
             });
             this.map.on('click', this.handleMapClick);
             this.map.on('movestart', this.handleMapMove);
-            this.map.on('move', this.handleMapMove);
             this.map.on('moveend', this.handleMapMove);
             this.loadMarkers();
 
@@ -359,7 +358,7 @@ export default {
         handleMapMove(event) {
             this.$emit('trigger-event', {
                 name: 'map:' + event.type,
-                event: { ...event },
+                event: { lngLat: this.map.getCenter() },
             });
         },
         handleMapClick(event) {
