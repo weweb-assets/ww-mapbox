@@ -382,7 +382,7 @@ export default {
         /* wwEditor:start */
         getMarkerTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
-            return { marker: this.markers[0] };
+            return { marker: this.markers[0], domEvent: { x: 0, y: 0 } };
         },
         getMarkerDragTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
