@@ -67,29 +67,7 @@ export default {
                     lat: 48.84872727506581,
                     lng: 2.351657694024656,
                 },
-                point: {
-                    x: 474,
-                    y: 196,
-                },
-                domEvent: {},
             },
-            default: true,
-        },
-        {
-            name: 'map:move',
-            label: { en: 'On map move' },
-            event: {
-                lngLat: {
-                    lat: 48.84872727506581,
-                    lng: 2.351657694024656,
-                },
-                point: {
-                    x: 474,
-                    y: 196,
-                },
-                domEvent: {},
-            },
-            default: true,
         },
         {
             name: 'map:moveend',
@@ -99,13 +77,7 @@ export default {
                     lat: 48.84872727506581,
                     lng: 2.351657694024656,
                 },
-                point: {
-                    x: 474,
-                    y: 196,
-                },
-                domEvent: {},
             },
-            default: true,
         },
         {
             name: 'marker:mouseover',
@@ -119,6 +91,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: {},
             },
             getTestEvent: 'getMarkerTestEvent',
         },
@@ -134,6 +107,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: {},
             },
             getTestEvent: 'getMarkerTestEvent',
         },
@@ -149,6 +123,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: {},
             },
             getTestEvent: 'getMarkerTestEvent',
         },
