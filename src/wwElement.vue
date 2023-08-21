@@ -84,8 +84,8 @@ export default {
         },
         popupOptions() {
             return {
-                closeButton: this.content.popupCloseButton === undefined ? true : this.content.popupCloseButton,
-                closeOnClick: this.content.popupCloseOnClick === undefined  ? true : this.content.popupCloseOnClick,
+                closeButton: !this.content.popupHideCloseButton,
+                closeOnClick: !this.content.popupStayOpenOnClick,
                 closeOnMove: this.content.popupCloseOnMove,
                 maxWidth:this.content.popupMaxWidth || '240px',
             }

@@ -322,16 +322,16 @@ export default {
             type: 'OnOff',
             defaultValue: false,
         },
-        popupCloseButton: {
+        popupHideCloseButton: {
             label: {
                 en: 'Popup close button',
                 fr: 'Popup close button',
             },
             type: 'OnOff',
-            defaultValue: true,
+            defaultValue: false,
             hidden: content => content.disablePopups,
         },
-        popupCloseOnClick: {
+        popupStayOpenOnClick: {
             label: {
                 en: 'Popup close on click',
                 fr: 'Popup close on click',
@@ -351,7 +351,7 @@ export default {
         },
         popupMaxWidth: {
             type: 'Length',
-            label: { en: 'Default marker popup maxWidth' },
+            label: { en: 'Popup max width' },
             options: {
                 unitChoices: [
                     { value: 'px', label: 'px', min: 10, max: 500 },
