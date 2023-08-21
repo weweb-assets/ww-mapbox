@@ -82,6 +82,14 @@ export default {
             const lat = Number(this.content.lat)
             return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
         },
+        popupOptions() {
+            return {
+                closeButton: this.content.popupCloseButton === undefined ? true : this.content.popupCloseButton,
+                closeOnClick: this.content.popupCloseOnClick === undefined  ? true : this.content.popupCloseOnClick,
+                closeOnMove: this.content.popupCloseOnMove,
+                maxWidth:this.content.popupMaxWidth || '240px',
+            }
+        },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
             const latField = this.content.markersLatField || DEFAULT_MARKERS_LAT_FIELD;
@@ -308,7 +316,7 @@ export default {
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
-                if (marker.content) _marker.setPopup(new mapboxgl.Popup().setHTML(marker.content))
+                if (marker.content) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
                 _marker.getElement().addEventListener('mouseover', (e) => this.handleMarkerMouseover(marker, e));
                 _marker.getElement().addEventListener('mouseout', (e) => this.handleMarkerMouseout(marker, e));

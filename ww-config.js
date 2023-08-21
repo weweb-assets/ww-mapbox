@@ -294,6 +294,43 @@ export default {
             classes: true,
             responsive: true,
         },
+        PopupCloseButton: {
+            label: {
+                en: 'Popup close button',
+                fr: 'Popup close button',
+            },
+            type: 'OnOff',
+            defaultValue: true,
+        },
+        PopupCloseOnClick: {
+            label: {
+                en: 'Popup close on click',
+                fr: 'Popup close on click',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+        },
+        PopupCloseOnMove: {
+            label: {
+                en: 'Popup close on move',
+                fr: 'Popup close on move',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+        },
+        PopupMaxWidth: {
+            type: 'Length',
+            label: { en: 'Default marker popup maxWidth' },
+            options: {
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 10, max: 500 },
+                ],
+            },
+            defaultValue: '240px',
+            classes: true,
+            states: true,
+            responsive: true,
+        },
         apiAccessToken: {
             section: 'settings',
             label: { en: 'API access token', fr: 'API access token' },
