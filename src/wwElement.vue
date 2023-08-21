@@ -320,8 +320,8 @@ export default {
                     .addTo(this.map);
                 if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
-                _marker.getElement().addEventListener('mouseover', (e) => this.handleMarkerMouseover(marker, e));
-                _marker.getElement().addEventListener('mouseout', (e) => this.handleMarkerMouseout(marker, e));
+                _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
+                _marker.getElement().addEventListener('mouseleave', (e) => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
