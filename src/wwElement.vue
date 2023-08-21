@@ -363,7 +363,7 @@ export default {
                     name: 'map:' + event.type,
                     event: { lngLat: this.map.getCenter() },
                 });
-            }, 500)
+            }, 200)
         },
         handleMapClick(event) {
             this.$emit('trigger-event', {
