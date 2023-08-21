@@ -63,6 +63,7 @@ export default {
         return {
             mapContainerId: '',
             error: '',
+            mapMoveDebounce: {}
         };
     },
     mounted() {
@@ -356,10 +357,13 @@ export default {
             });
         },
         handleMapMove(event) {
-            this.$emit('trigger-event', {
-                name: 'map:' + event.type,
-                event: { lngLat: this.map.getCenter() },
-            });
+            clearTimeout(this.mapMoveDebounce[event.type])
+            this.mapMoveDebounce[event.type] = setTimeout(() => {
+                this.$emit('trigger-event', {
+                    name: 'map:' + event.type,
+                    event: { lngLat: this.map.getCenter() },
+                });
+            }, 500)
         },
         handleMapClick(event) {
             this.$emit('trigger-event', {
