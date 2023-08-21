@@ -314,6 +314,14 @@ export default {
             classes: true,
             responsive: true,
         },
+        disablePopups: {
+            label: {
+                en: 'Disable popups',
+                fr: 'Disable popups',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+        },
         PopupCloseButton: {
             label: {
                 en: 'Popup close button',
@@ -321,6 +329,7 @@ export default {
             },
             type: 'OnOff',
             defaultValue: true,
+            hidden: content => content.disablePopups,
         },
         PopupCloseOnClick: {
             label: {
@@ -329,6 +338,7 @@ export default {
             },
             type: 'OnOff',
             defaultValue: false,
+            hidden: content => content.disablePopups,
         },
         PopupCloseOnMove: {
             label: {
@@ -337,6 +347,7 @@ export default {
             },
             type: 'OnOff',
             defaultValue: false,
+            hidden: content => content.disablePopups,
         },
         PopupMaxWidth: {
             type: 'Length',
@@ -347,9 +358,7 @@ export default {
                 ],
             },
             defaultValue: '240px',
-            classes: true,
-            states: true,
-            responsive: true,
+            hidden: content => content.disablePopups,
         },
         apiAccessToken: {
             section: 'settings',

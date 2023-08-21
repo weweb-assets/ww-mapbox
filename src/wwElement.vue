@@ -318,7 +318,7 @@ export default {
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
-                if (marker.content) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
+                if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
                 _marker.getElement().addEventListener('mouseover', (e) => this.handleMarkerMouseover(marker, e));
                 _marker.getElement().addEventListener('mouseout', (e) => this.handleMarkerMouseout(marker, e));
