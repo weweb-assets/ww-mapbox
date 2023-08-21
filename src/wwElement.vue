@@ -63,8 +63,7 @@ export default {
         return {
             mapContainerId: '',
             error: '',
-            mapMoveDebounce: {},
-            ignoreMapMove: false,
+            mapMoveDebounce: {}
         };
     },
     mounted() {
@@ -257,6 +256,8 @@ export default {
             this.map.on('click', this.handleMapClick);
             this.map.on('movestart', this.handleMapMove);
             this.map.on('moveend', this.handleMapMove);
+            this.map.on('dragstart', this.handleMapMove);
+            this.map.on('dragend', this.handleMapMove);
             this.loadMarkers();
 
             this.map.on('load', () => {
@@ -331,7 +332,6 @@ export default {
         },
         fitMarkersBounds() {
             if (!this.map || !this.markers.length) return;
-            this.ignoreMapMove = true
             const baseBounds = new mapboxgl.LngLatBounds(
                 [this.markers[0].position.lng, this.markers[0].position.lat],
                 [this.markers[0].position.lng, this.markers[0].position.lat]
@@ -341,7 +341,6 @@ export default {
             }, baseBounds);
 
             this.map.fitBounds(bounds, { padding: 20 });
-            this.ignoreMapMove = false
         },
         handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
@@ -368,7 +367,6 @@ export default {
             });
         },
         handleMapMove(event) {
-            if(this.ignoreMapMove) return
             clearTimeout(this.mapMoveDebounce[event.type])
             this.mapMoveDebounce[event.type] = setTimeout(() => {
                 this.$emit('trigger-event', {

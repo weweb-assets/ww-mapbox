@@ -80,6 +80,26 @@ export default {
             },
         },
         {
+            name: 'map:dragstart',
+            label: { en: 'On map drag start' },
+            event: {
+                lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },
+            },
+        },
+        {
+            name: 'map:dragend',
+            label: { en: 'On map drag end' },
+            event: {
+                lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },
+            },
+        },
+        {
             name: 'marker:mouseover',
             label: { en: 'On marker mouse enter' },
             event: {
