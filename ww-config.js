@@ -59,26 +59,26 @@ export default {
             },
             default: true,
         },
-        {
-            name: 'map:movestart',
-            label: { en: 'On map move start' },
-            event: {
-                lngLat: {
-                    lat: 48.84872727506581,
-                    lng: 2.351657694024656,
-                },
-            },
-        },
-        {
-            name: 'map:moveend',
-            label: { en: 'On map move end' },
-            event: {
-                lngLat: {
-                    lat: 48.84872727506581,
-                    lng: 2.351657694024656,
-                },
-            },
-        },
+        // {
+        //     name: 'map:movestart',
+        //     label: { en: 'On map move start' },
+        //     event: {
+        //         lngLat: {
+        //             lat: 48.84872727506581,
+        //             lng: 2.351657694024656,
+        //         },
+        //     },
+        // },
+        // {
+        //     name: 'map:moveend',
+        //     label: { en: 'On map move end' },
+        //     event: {
+        //         lngLat: {
+        //             lat: 48.84872727506581,
+        //             lng: 2.351657694024656,
+        //         },
+        //     },
+        // },
         {
             name: 'map:dragstart',
             label: { en: 'On map drag start' },

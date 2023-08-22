@@ -370,13 +370,17 @@ export default {
             });
         },
         handleMapMove(event) {
-            clearTimeout(this.mapMoveDebounce[event.type])
-            this.mapMoveDebounce[event.type] = setTimeout(() => {
-                this.$emit('trigger-event', {
-                    name: 'map:' + event.type,
-                    event: { lngLat: this.map.getCenter() },
-                });
-            }, 200)
+            // clearTimeout(this.mapMoveDebounce[event.type])
+            // this.mapMoveDebounce[event.type] = setTimeout(() => {
+            //     this.$emit('trigger-event', {
+            //         name: 'map:' + event.type,
+            //         event: { lngLat: this.map.getCenter() },
+            //     });
+            // }, 200)
+            this.$emit('trigger-event', {
+                name: 'map:' + event.type,
+                event: { lngLat: this.map.getCenter() },
+            });
         },
         handleMapClick(event) {
             this.$emit('trigger-event', {
