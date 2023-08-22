@@ -224,6 +224,9 @@ export default {
         markers() {
             this.loadMarkers();
         },
+        popupOptions() {
+            this.loadMarkers();
+        },
         sources(newSources, oldSources) {
             this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
         },
