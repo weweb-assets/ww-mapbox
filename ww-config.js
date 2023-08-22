@@ -360,6 +360,8 @@ export default {
                 noRange: true,
                 unitChoices: [
                     { value: 'px', label: 'px', min: 10, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                    { value: 'auto', label: 'auto' },
                 ],
             },
             defaultValue: '240px',
