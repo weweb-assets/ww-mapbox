@@ -42,6 +42,10 @@ export default {
             ],
         ],
     },
+    actions: [
+        { label: 'Get instance', action: 'getInstance' },
+        { label: 'Get center', action: 'getCenter' },
+    ],
     triggerEvents: [
         {
             name: 'map:click',

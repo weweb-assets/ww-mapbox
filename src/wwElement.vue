@@ -63,7 +63,6 @@ export default {
         return {
             mapContainerId: '',
             error: '',
-            mapMoveDebounce: {}
         };
     },
     mounted() {
@@ -370,13 +369,6 @@ export default {
             });
         },
         handleMapMove(event) {
-            // clearTimeout(this.mapMoveDebounce[event.type])
-            // this.mapMoveDebounce[event.type] = setTimeout(() => {
-            //     this.$emit('trigger-event', {
-            //         name: 'map:' + event.type,
-            //         event: { lngLat: this.map.getCenter() },
-            //     });
-            // }, 200)
             this.$emit('trigger-event', {
                 name: 'map:' + event.type,
                 event: { lngLat: this.map.getCenter() },
@@ -399,6 +391,12 @@ export default {
             const _layer = { ...layer };
             if (!_layer.filter) delete _layer.filter;
             return _layer;
+        },
+        getInstance() {
+            return this.map
+        },
+        getCenter() {
+            return this.map.getCenter()
         },
         /* wwEditor:start */
         getMarkerTestEvent() {
