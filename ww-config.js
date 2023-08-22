@@ -325,8 +325,8 @@ export default {
         },
         popupHideCloseButton: {
             label: {
-                en: 'Popup close button',
-                fr: 'Popup close button',
+                en: 'Popup hide close button',
+                fr: 'Popup hide close button',
             },
             type: 'OnOff',
             defaultValue: false,
@@ -335,8 +335,8 @@ export default {
         },
         popupStayOpenOnClick: {
             label: {
-                en: 'Popup close on click',
-                fr: 'Popup close on click',
+                en: 'Popup stay open on click',
+                fr: 'Popup stay open on click',
             },
             type: 'OnOff',
             defaultValue: false,
@@ -365,6 +365,9 @@ export default {
             defaultValue: '240px',
             hidden: content => content.disablePopups,
             bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
         },
         apiAccessToken: {
             section: 'settings',
