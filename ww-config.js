@@ -42,6 +42,10 @@ export default {
             ],
         ],
     },
+    // actions: [
+    //     { label: 'Get instance', action: 'getInstance' },
+    //     { label: 'Get center', action: 'getCenter' },
+    // ],
     triggerEvents: [
         {
             name: 'map:click',
@@ -55,9 +59,49 @@ export default {
                     x: 474,
                     y: 196,
                 },
-                domEvent: {},
+                domEvent: { x: 0, y: 0 },
             },
             default: true,
+        },
+        // {
+        //     name: 'map:movestart',
+        //     label: { en: 'On map move start' },
+        //     event: {
+        //         lngLat: {
+        //             lat: 48.84872727506581,
+        //             lng: 2.351657694024656,
+        //         },
+        //     },
+        // },
+        // {
+        //     name: 'map:moveend',
+        //     label: { en: 'On map move end' },
+        //     event: {
+        //         lngLat: {
+        //             lat: 48.84872727506581,
+        //             lng: 2.351657694024656,
+        //         },
+        //     },
+        // },
+        {
+            name: 'map:dragstart',
+            label: { en: 'On map drag start' },
+            event: {
+                lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },
+            },
+        },
+        {
+            name: 'map:dragend',
+            label: { en: 'On map drag end' },
+            event: {
+                lngLat: {
+                    lat: 48.84872727506581,
+                    lng: 2.351657694024656,
+                },
+            },
         },
         {
             name: 'marker:mouseover',
@@ -71,6 +115,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: { x: 0, y: 0 },
             },
             getTestEvent: 'getMarkerTestEvent',
         },
@@ -86,6 +131,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: { x: 0, y: 0 },
             },
             getTestEvent: 'getMarkerTestEvent',
         },
@@ -101,6 +147,7 @@ export default {
                     },
                     rawData: {},
                 },
+                domEvent: { x: 0, y: 0 },
             },
             getTestEvent: 'getMarkerTestEvent',
         },
@@ -266,6 +313,63 @@ export default {
             },
             type: 'Color',
             defaultValue: '#F23636',
+            bindable: true,
+            states: true,
+            classes: true,
+            responsive: true,
+        },
+        disablePopups: {
+            label: {
+                en: 'Disable popups',
+                fr: 'Disable popups',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            bindable: true,
+        },
+        popupHideCloseButton: {
+            label: {
+                en: 'Popup hide close button',
+                fr: 'Popup hide close button',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            hidden: content => content.disablePopups,
+            bindable: true,
+        },
+        popupStayOpenOnClick: {
+            label: {
+                en: 'Popup stay open on click',
+                fr: 'Popup stay open on click',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            hidden: content => content.disablePopups,
+            bindable: true,
+        },
+        popupCloseOnMove: {
+            label: {
+                en: 'Popup close on move',
+                fr: 'Popup close on move',
+            },
+            type: 'OnOff',
+            defaultValue: false,
+            hidden: content => content.disablePopups,
+            bindable: true,
+        },
+        popupMaxWidth: {
+            type: 'Length',
+            label: { en: 'Popup max width' },
+            options: {
+                noRange: true,
+                unitChoices: [
+                    { value: 'px', label: 'px', min: 10, max: 500 },
+                    { value: '%', label: '%', min: 0, max: 100 },
+                    { value: 'auto', label: 'auto' },
+                ],
+            },
+            defaultValue: '240px',
+            hidden: content => content.disablePopups,
             bindable: true,
             states: true,
             classes: true,

@@ -43,20 +43,40 @@ const DEFAULT_SOURCES_TYPE_FIELD = 'type';
 const DEFAULT_SOURCES_URL_FIELD = 'url';
 const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
+import { computed } from 'vue';
+
 export default {
     props: {
+        uid: { type: String, required: true },
         content: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
     },
     emits: ['trigger-event', 'update:content:effect'],
-    setup() {
+    setup(props) {
+        const center = computed(() => {
+            const lng = Number(props.content.lng)
+            const lat = Number(props.content.lat)
+            return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
+        })
+
+        const { value: variableCenter, setValue: setCenter } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'center',
+            type: 'object',
+            defaultValue: {lng: center.value[0], lat: center.value[1]},
+            readonly: true,
+        });
+
         return {
             resizeObserver: null,
             map: null,
             markerInstances: [],
             componentKey: 0,
+            center,
+            variableCenter,
+            setCenter
         };
     },
     data() {
@@ -76,10 +96,13 @@ export default {
         mapStyle() {
             return this.content.mapStyle || this.content.styleUrl;
         },
-        center() {
-            const lng = Number(this.content.lng)
-            const lat = Number(this.content.lat)
-            return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
+        popupOptions() {
+            return {
+                closeButton: !this.content.popupHideCloseButton,
+                closeOnClick: !this.content.popupStayOpenOnClick,
+                closeOnMove: this.content.popupCloseOnMove,
+                maxWidth:this.content.popupMaxWidth || '240px',
+            }
         },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
@@ -215,6 +238,9 @@ export default {
         markers() {
             this.loadMarkers();
         },
+        popupOptions() {
+            this.loadMarkers();
+        },
         sources(newSources, oldSources) {
             this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
         },
@@ -244,7 +270,12 @@ export default {
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
+            this.map.on('move', () => this.setCenter(this.map.getCenter()));
             this.map.on('click', this.handleMapClick);
+            this.map.on('movestart', this.handleMapMove);
+            this.map.on('moveend', this.handleMapMove);
+            this.map.on('dragstart', this.handleMapMove);
+            this.map.on('dragend', this.handleMapMove);
             this.loadMarkers();
 
             this.map.on('load', () => {
@@ -305,10 +336,10 @@ export default {
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
-                if (marker.content) _marker.setPopup(new mapboxgl.Popup().setHTML(marker.content))
-                _marker.getElement().addEventListener('click', () => this.handleMarkerClick(marker));
-                _marker.getElement().addEventListener('mouseover', () => this.handleMarkerMouseover(marker));
-                _marker.getElement().addEventListener('mouseout', () => this.handleMarkerMouseout(marker));
+                if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
+                _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
+                _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
+                _marker.getElement().addEventListener('mouseleave', (e) => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
@@ -329,28 +360,34 @@ export default {
 
             this.map.fitBounds(bounds, { padding: 20 });
         },
-        handleMarkerClick(marker) {
+        handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:click',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
-        handleMarkerMouseover(marker) {
+        handleMarkerMouseover(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseover',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
-        handleMarkerMouseout(marker) {
+        handleMarkerMouseout(marker, domEvent) {
             this.$emit('trigger-event', {
                 name: 'marker:mouseout',
-                event: { marker },
+                event: { marker, domEvent },
             });
         },
         handleMarkerDrag(marker, event) {
             this.$emit('trigger-event', {
                 name: 'marker:' + event.type,
                 event: { marker, lngLat: event.target._lngLat },
+            });
+        },
+        handleMapMove(event) {
+            this.$emit('trigger-event', {
+                name: 'map:' + event.type,
+                event: { lngLat: this.map.getCenter() },
             });
         },
         handleMapClick(event) {
@@ -371,10 +408,16 @@ export default {
             if (!_layer.filter) delete _layer.filter;
             return _layer;
         },
+        getInstance() {
+            return this.map
+        },
+        getCenter() {
+            return this.map.getCenter()
+        },
         /* wwEditor:start */
         getMarkerTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
-            return { marker: this.markers[0] };
+            return { marker: this.markers[0], domEvent: { x: 0, y: 0 } };
         },
         getMarkerDragTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
