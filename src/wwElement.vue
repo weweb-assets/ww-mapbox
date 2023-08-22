@@ -43,6 +43,8 @@ const DEFAULT_SOURCES_TYPE_FIELD = 'type';
 const DEFAULT_SOURCES_URL_FIELD = 'url';
 const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
+import { computed } from 'vue';
+
 export default {
     props: {
         uid: { type: String, required: true },
@@ -53,11 +55,17 @@ export default {
     },
     emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
+        const center = computed(() => {
+            const lng = Number(props.content.lng)
+            const lat = Number(props.content.lat)
+            return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
+        })
+
         const { value: variableCenter, setValue: setCenter } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'center',
             type: 'object',
-            defaultValue: {lng: props.content.lng, lat: props.content.lat},
+            defaultValue: {lng: center.value[0], lat: center.value[1]},
             readonly: true,
         });
 
@@ -66,6 +74,7 @@ export default {
             map: null,
             markerInstances: [],
             componentKey: 0,
+            center,
             variableCenter,
             setCenter
         };
@@ -86,11 +95,6 @@ export default {
     computed: {
         mapStyle() {
             return this.content.mapStyle || this.content.styleUrl;
-        },
-        center() {
-            const lng = Number(this.content.lng)
-            const lat = Number(this.content.lat)
-            return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
         },
         popupOptions() {
             return {
