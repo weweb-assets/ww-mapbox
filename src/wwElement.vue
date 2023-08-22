@@ -45,18 +45,29 @@ const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
 export default {
     props: {
+        uid: { type: String, required: true },
         content: { type: Object, required: true },
         /* wwEditor:start */
         wwEditorState: { type: Object, required: true },
         /* wwEditor:end */
     },
     emits: ['trigger-event', 'update:content:effect'],
-    setup() {
+    setup(props) {
+        const { value: variableCenter, setValue: setCenter } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'center',
+            type: 'object',
+            defaultValue: {lng: props.content.lng, lat: props.content.lat},
+            readonly: true,
+        });
+
         return {
             resizeObserver: null,
             map: null,
             markerInstances: [],
             componentKey: 0,
+            variableCenter,
+            setCenter
         };
     },
     data() {
@@ -255,6 +266,7 @@ export default {
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
+            this.map.on('move', () => this.setCenter(this.map.getCenter()));
             this.map.on('click', this.handleMapClick);
             this.map.on('movestart', this.handleMapMove);
             this.map.on('moveend', this.handleMapMove);
