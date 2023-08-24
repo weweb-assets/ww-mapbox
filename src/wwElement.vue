@@ -71,7 +71,7 @@ export default {
 
         const { value: variableMap, setValue: setMap } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
-            name: 'mapInstance',
+            name: 'instance',
             type: 'object',
             defaultValue: null,
             labelOnly: '{Map Instance}',
