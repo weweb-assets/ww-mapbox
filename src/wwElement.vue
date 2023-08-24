@@ -43,7 +43,7 @@ const DEFAULT_SOURCES_TYPE_FIELD = 'type';
 const DEFAULT_SOURCES_URL_FIELD = 'url';
 const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
-import { computed } from 'vue';
+import { computed, markRaw } from 'vue';
 
 export default {
     props: {
@@ -69,6 +69,15 @@ export default {
             readonly: true,
         });
 
+        const { value: variableMap, setValue: setMap } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'mapboxgl - map',
+            type: 'object',
+            defaultValue: null,
+            isExplorable: false,
+            readonly: true,
+        });
+
         return {
             resizeObserver: null,
             map: null,
@@ -76,7 +85,9 @@ export default {
             componentKey: 0,
             center,
             variableCenter,
-            setCenter
+            setCenter,
+            variableMap,
+            setMap
         };
     },
     data() {
@@ -267,6 +278,7 @@ export default {
                 logoPosition: this.content.logoPosition,
                 attributionControl: false,
             });
+            this.setMap(markRaw(this.map))
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
