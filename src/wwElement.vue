@@ -74,7 +74,8 @@ export default {
             name: 'mapInstance',
             type: 'object',
             defaultValue: null,
-            isSearchable: false,
+            type: 'mapbox-map',
+            labelOnly: '{Map Instance}',
             readonly: true,
         });
 
