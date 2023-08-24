@@ -71,10 +71,10 @@ export default {
 
         const { value: variableMap, setValue: setMap } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
-            name: 'mapboxgl - map',
+            name: 'mapInstance',
             type: 'object',
             defaultValue: null,
-            isExplorable: false,
+            isSearchable: false,
             readonly: true,
         });
 
