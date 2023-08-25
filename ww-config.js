@@ -42,11 +42,19 @@ export default {
             ],
         ],
     },
-    // actions: [
-    //     { label: 'Get instance', action: 'getInstance' },
-    //     { label: 'Get center', action: 'getCenter' },
-    // ],
     triggerEvents: [
+        {
+            name: 'map:load',
+            label: { en: 'On map load' },
+        },
+        {
+            name: 'map:render',
+            label: { en: 'On map render' },
+        },
+        {
+            name: 'map:idle',
+            label: { en: 'On map idle' },
+        },
         {
             name: 'map:click',
             label: { en: 'On map click' },

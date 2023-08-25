@@ -279,6 +279,9 @@ export default {
                 attributionControl: false,
             });
             this.setMap(markRaw(this.map))
+            this.map('load', this.fireEvent('map:load'));
+            this.map('render', this.fireEvent('map:render'));
+            this.map('idle', this.fireEvent('map:idle'));
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
@@ -420,11 +423,11 @@ export default {
             if (!_layer.filter) delete _layer.filter;
             return _layer;
         },
-        getInstance() {
-            return this.map
-        },
-        getCenter() {
-            return this.map.getCenter()
+        fireEvent(eventName) {
+            this.$emit('trigger-event', {
+                name: eventName,
+                event: null,
+            });
         },
         /* wwEditor:start */
         getMarkerTestEvent() {
