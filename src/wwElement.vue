@@ -357,17 +357,20 @@ export default {
             }
 
             for (const marker of this.markers) {
+                const el = document.createElement('div');
+                el.className = 'marker';
+                el.style.backgroundImage = `url(${marker.icon})`;
+                el.style.width = `${marker.width}px`;
+                el.style.height = `${marker.height}px`;
+                el.style.backgroundSize = '100%';
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
+                    element: marker.icon ? el : undefined
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
                 if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
-                
-                if (marker.icon) _marker.getElement().style.backgroundImage = `url(${marker.icon})`;
-                if (marker.width) _marker.getElement().style.width = `${marker.width}px`;
-                if (marker.height) _marker.getElement().style.height = `${marker.height}px`;
 
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
                 _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
