@@ -314,6 +314,12 @@ export default {
             },
             defaultValue: 'bottom-left',
         },
+        customIcon: {
+            label: 'Markers icon',
+            type: 'OnOff',
+            section: 'settings',
+            defaultValue: false,
+        },
         defaultMarkerColor: {
             label: {
                 en: 'Default Markers color',
@@ -325,6 +331,19 @@ export default {
             states: true,
             classes: true,
             responsive: true,
+            hidden: (content, _sidepanelContent, boundProps) => content.customIcon,
+        },
+        defaultMarkerIcon: {
+            label: { en: 'Default Markers Icon' },
+            type: 'Image',
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
+            },
+            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            /* wwEditor:end */
         },
         disablePopups: {
             label: {
@@ -625,6 +644,23 @@ export default {
             label: {
                 en: 'Marker draggable',
                 fr: 'Marker draggable',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersIconField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            label: {
+                en: 'Marker icon',
+                fr: 'Marker icon',
             },
             type: 'ObjectPropertyPath',
             options: content => {
