@@ -28,8 +28,8 @@ const DEFAULT_MARKERS_LNG_FIELD = 'lng';
 const DEFAULT_MARKERS_COLOR_FIELD = 'color';
 const DEFAULT_MARKERS_DRAGGABLE_FIELD = 'draggable';
 const DEFAULT_MARKERS_ICON_FIELD = 'icon';
-// const DEFAULT_MARKERS_WIDTH_FIELD = 'width';
-// const DEFAULT_MARKERS_HEIGHT_FIELD = 'height';
+const DEFAULT_MARKERS_HEIGHT_FIELD = 'height';
+const DEFAULT_MARKERS_WIDTH_FIELD = 'width';
 
 const DEFAULT_LAYERS_ID_FIELD = 'id';
 const DEFAULT_LAYERS_TYPE_FIELD = 'type';
@@ -126,6 +126,8 @@ export default {
             const colorField = this.content.markersColorField || DEFAULT_MARKERS_COLOR_FIELD;
             const draggableField = this.content.markersDraggableField || DEFAULT_MARKERS_DRAGGABLE_FIELD;
             const iconField = this.content.markersIconField || DEFAULT_MARKERS_ICON_FIELD;
+            const heightField = this.content.markersHeightField || DEFAULT_MARKERS_HEIGHT_FIELD;
+            const widthField = this.content.markersWidthField || DEFAULT_MARKERS_WIDTH_FIELD;
 
             const data = wwLib.wwCollection.getCollectionData(this.content.markers);
             if (!Array.isArray(data)) return [];
@@ -141,7 +143,11 @@ export default {
                     lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
                     lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
-                icon: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null
+                icon: {
+                    img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
+                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 41,
+                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || 27
+                },
                 rawData: marker,
             }));
         },
@@ -359,13 +365,9 @@ export default {
                     .addTo(this.map);
                 if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
                 
-                if (marker.icon) {
-                    _marker.getElement().className = 'marker';
-                    _marker.getElement().style.backgroundImage = `url(${marker.icon})`;
-                    _marker.getElement().style.width = `${_marker.properties.iconSize[0]}px`;
-                    _marker.getElement().style.height = `${ _marker.properties.iconSize[1]}px`;
-                    _marker.getElement().style.backgroundSize = '100%';
-                }
+                if (marker.icon) _marker.getElement().style.backgroundImage = `url(${marker.icon})`;
+                if (marker.width) _marker.getElement().style.width = `${marker.width}px`;
+                if (marker.height) _marker.getElement().style.height = `${marker.height}px`;
 
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
                 _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));

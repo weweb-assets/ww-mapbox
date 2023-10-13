@@ -16,6 +16,9 @@ export default {
                 'markersLngField',
                 'markersColorField',
                 'markersDraggableField',
+                'markersIconField',
+                'markersHeightField',
+                'markersWidthField',
             ],
             'advancedOptions',
             [
@@ -317,7 +320,6 @@ export default {
         customIcon: {
             label: 'Markers icon',
             type: 'OnOff',
-            section: 'settings',
             defaultValue: false,
         },
         defaultMarkerColor: {
@@ -334,7 +336,7 @@ export default {
             hidden: (content, _sidepanelContent, boundProps) => content.customIcon,
         },
         defaultMarkerIcon: {
-            label: { en: 'Default Markers Icon' },
+            label: 'Default Markers Icon',
             type: 'Image',
             bindable: true,
             /* wwEditor:start */
@@ -344,6 +346,26 @@ export default {
             },
             hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
             /* wwEditor:end */
+        },
+        defaultMarkerWidth: {
+            label: 'Default Markers Width',
+            type: 'Number',
+            bindable: true,
+            options: { min: 0, step: 1 },
+            /* wwEditor:start */
+            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            /* wwEditor:end */
+            defaultValue: 27
+        },
+        defaultMarkerHeight: {
+            label: 'Default Markers Height',
+            type: 'Number',
+            bindable: true,
+            options: { min: 0, step: 1 },
+            /* wwEditor:start */
+            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            /* wwEditor:end */
+            defaultValue: 41
         },
         disablePopups: {
             label: {
@@ -661,6 +683,40 @@ export default {
             label: {
                 en: 'Marker icon',
                 fr: 'Marker icon',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersHeightField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            label: {
+                en: 'Marker height',
+                fr: 'Marker height',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersWidthField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            label: {
+                en: 'Marker width',
+                fr: 'Marker width',
             },
             type: 'ObjectPropertyPath',
             options: content => {
