@@ -20,7 +20,7 @@
 <script>
 import mapboxgl from 'mapbox-gl';
 // Use local version because we have to replace every rbg() with rgba() version https://stackoverflow.com/a/71806296
-import './mapbox-gl.css';
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const DEFAULT_MARKERS_CONTENT_FIELD = 'content';
 const DEFAULT_MARKERS_LAT_FIELD = 'lat';

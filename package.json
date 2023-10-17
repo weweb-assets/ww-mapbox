@@ -14,6 +14,6 @@
     "@vue/eslint-config-prettier": "^6.0.0"
   },
   "dependencies": {
-    "mapbox-gl": "2.14.0"
+    "mapbox-gl": "3.0.0-beta.4"
   }
 }
