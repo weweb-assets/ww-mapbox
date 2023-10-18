@@ -19,7 +19,8 @@
 
 <script>
 import mapboxgl from 'mapbox-gl';
-import './mapbox-gl.css';
+// Use local version because we have to replace every rbg() with rgba() version https://stackoverflow.com/a/71806296
+import 'mapbox-gl/dist/mapbox-gl.css';
 
 const DEFAULT_MARKERS_CONTENT_FIELD = 'content';
 const DEFAULT_MARKERS_LAT_FIELD = 'lat';
@@ -43,7 +44,7 @@ const DEFAULT_SOURCES_TYPE_FIELD = 'type';
 const DEFAULT_SOURCES_URL_FIELD = 'url';
 const DEFAULT_SOURCES_OPTIONS_FIELD = 'options';
 
-import { computed } from 'vue';
+import { computed, markRaw } from 'vue';
 
 export default {
     props: {
@@ -69,6 +70,15 @@ export default {
             readonly: true,
         });
 
+        const { value: variableMap, setValue: setMap } = wwLib.wwVariable.useComponentVariable({
+            uid: props.uid,
+            name: 'instance',
+            type: 'object',
+            defaultValue: null,
+            labelOnly: '{Map Instance}',
+            readonly: true,
+        });
+
         return {
             resizeObserver: null,
             map: null,
@@ -76,7 +86,9 @@ export default {
             componentKey: 0,
             center,
             variableCenter,
-            setCenter
+            setCenter,
+            variableMap,
+            setMap
         };
     },
     data() {
@@ -267,6 +279,10 @@ export default {
                 logoPosition: this.content.logoPosition,
                 attributionControl: false,
             });
+            this.setMap(markRaw(this.map))
+            this.map.on('load', () => this.fireEvent('map:load'));
+            this.map.on('render', () => this.fireEvent('map:render'));
+            this.map.on('idle', () => this.fireEvent('map:idle'));
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
@@ -408,11 +424,11 @@ export default {
             if (!_layer.filter) delete _layer.filter;
             return _layer;
         },
-        getInstance() {
-            return this.map
-        },
-        getCenter() {
-            return this.map.getCenter()
+        fireEvent(eventName) {
+            this.$emit('trigger-event', {
+                name: eventName,
+                event: null,
+            });
         },
         /* wwEditor:start */
         getMarkerTestEvent() {
