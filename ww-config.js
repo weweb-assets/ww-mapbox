@@ -317,8 +317,8 @@ export default {
             },
             defaultValue: 'bottom-left',
         },
-        customIcon: {
-            label: 'Markers icon',
+        customMarker: {
+            label: 'Custom marker',
             type: 'OnOff',
             defaultValue: false,
         },
@@ -333,7 +333,7 @@ export default {
             states: true,
             classes: true,
             responsive: true,
-            hidden: (content, _sidepanelContent, boundProps) => content.customIcon,
+            hidden: (content, _sidepanelContent, boundProps) => content.customMarker,
         },
         defaultMarkerIcon: {
             label: 'Default Markers Icon',
@@ -344,7 +344,7 @@ export default {
                 type: 'string',
                 tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
             },
-            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
         },
         defaultMarkerWidth: {
@@ -353,7 +353,7 @@ export default {
             bindable: true,
             options: { min: 0, step: 1 },
             /* wwEditor:start */
-            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
             defaultValue: 27
         },
@@ -363,7 +363,7 @@ export default {
             bindable: true,
             options: { min: 0, step: 1 },
             /* wwEditor:start */
-            hidden: (content, _sidepanelContent, boundProps) => !content.customIcon,
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
             defaultValue: 41
         },
@@ -554,6 +554,22 @@ export default {
                             draggable: {
                                 label: { en: 'Draggable' },
                                 type: 'OnOff',
+                            },
+                            width: {
+                                label: { en: 'Width' },
+                                type: 'Number',
+                                options: { min: 0, step: 1 },
+                                defaultValue: 27
+                            },
+                            height: {
+                                label: { en: 'Height' },
+                                type: 'Number',
+                                options: { min: 0, step: 1 },
+                                defaultValue: 27
+                            },
+                            icon: {
+                                label: { en: 'Icon' },
+                                type: 'Image',
                             },
                         },
                     },

@@ -143,11 +143,11 @@ export default {
                     lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
                     lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
-                icon: {
+                icon: this.content.customMarker ? {
                     img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
                     height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 41,
                     width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || 27
-                },
+                } : null,
                 rawData: marker,
             }));
         },
@@ -359,10 +359,11 @@ export default {
             for (const marker of this.markers) {
                 const el = document.createElement('div');
                 el.className = 'marker';
-                el.style.backgroundImage = `url(${marker.icon})`;
-                el.style.width = `${marker.width}px`;
-                el.style.height = `${marker.height}px`;
+                el.style.backgroundImage = this.formatUrl(marker.icon?.img);
+                el.style.width = `${marker.icon?.width}px`;
+                el.style.height = `${marker.icon?.height}px`;
                 el.style.backgroundSize = '100%';
+                el.style.backgroundRepeat = 'no-repeat';
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
@@ -378,6 +379,8 @@ export default {
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
+
+
                 this.markerInstances.push(_marker);
             }
 
@@ -437,6 +440,10 @@ export default {
             delete _source.options;
             if (['geojson', 'video'].includes(_source.type)) delete _source.url;
             return _source;
+        },
+        formatUrl(url) {
+            if(typeof url !== 'string') return null
+            return url.startsWith('designs/') ? `url(${wwLib.wwUtils.getCdnPrefix()}${url})` : `url(${url})`
         },
         formatLayer(layer) {
             const _layer = { ...layer };
