@@ -360,8 +360,8 @@ export default {
                 const el = document.createElement('div');
                 el.className = 'marker';
                 el.style.backgroundImage = this.formatUrl(marker.icon?.img);
-                el.style.width = `${marker.icon?.width}px`;
-                el.style.height = `${marker.icon?.height}px`;
+                el.style.width = `${marker.icon?.width || '27px'}`;
+                el.style.height = `${marker.icon?.height || '41px'}`;
                 el.style.backgroundSize = '100%';
                 el.style.backgroundRepeat = 'no-repeat';
                 const _marker = new mapboxgl.Marker({

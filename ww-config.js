@@ -349,23 +349,41 @@ export default {
         },
         defaultMarkerWidth: {
             label: 'Default Markers Width',
-            type: 'Number',
-            bindable: true,
-            options: { min: 0, step: 1 },
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'auto', label: 'auto', default: true },
+                    { value: 'px', label: 'px', min: 1, max: 300 }
+                ],
+                noRange: true,
+            },
             /* wwEditor:start */
             hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
-            defaultValue: 27
+            defaultValue: '27px',
+            responsive: true,
+            bindable: true,
+            states: true,
+            classes: true,
         },
         defaultMarkerHeight: {
             label: 'Default Markers Height',
-            type: 'Number',
-            bindable: true,
-            options: { min: 0, step: 1 },
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'auto', label: 'auto', default: true },
+                    { value: 'px', label: 'px', min: 1, max: 300 }
+                ],
+                noRange: true,
+            },
             /* wwEditor:start */
             hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
-            defaultValue: 41
+            defaultValue: '41px',
+            responsive: true,
+            bindable: true,
+            states: true,
+            classes: true,
         },
         disablePopups: {
             label: {
@@ -557,19 +575,58 @@ export default {
                             },
                             width: {
                                 label: { en: 'Width' },
-                                type: 'Number',
-                                options: { min: 0, step: 1 },
-                                defaultValue: 27
+                                type: 'Length',
+                                options: {
+                                    unitChoices: [
+                                        { value: 'auto', label: 'auto', default: true },
+                                        { value: 'px', label: 'px', min: 1, max: 300 }
+                                    ],
+                                    noRange: true,
+                                },
+                                /* wwEditor:start */
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents a length in px`',
+                                },
+                                /* wwEditor:end */
+                                defaultValue: '27px',
+                                responsive: true,
+                                bindable: true,
+                                states: true,
+                                classes: true,
                             },
                             height: {
                                 label: { en: 'Height' },
-                                type: 'Number',
-                                options: { min: 0, step: 1 },
-                                defaultValue: 27
+                                type: 'Length',
+                                options: {
+                                    unitChoices: [
+                                        { value: 'auto', label: 'auto', default: true },
+                                        { value: 'px', label: 'px', min: 1, max: 300 }
+                                    ],
+                                    noRange: true,
+                                },
+                                /* wwEditor:start */
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents a length in px`',
+                                },
+                                /* wwEditor:end */
+                                defaultValue: '41px',
+                                responsive: true,
+                                bindable: true,
+                                states: true,
+                                classes: true,
                             },
                             icon: {
                                 label: { en: 'Icon' },
                                 type: 'Image',
+                                /* wwEditor:start */
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
+                                },
+                                /* wwEditor:end */
+                                bindable: true,
                             },
                         },
                     },
