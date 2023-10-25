@@ -338,6 +338,9 @@ export default {
         defaultMarkerIcon: {
             label: 'Default Markers Icon',
             type: 'Image',
+            options: {
+                nullable: true,
+            },
             bindable: true,
             /* wwEditor:start */
             bindingValidation: {
@@ -620,6 +623,9 @@ export default {
                             icon: {
                                 label: { en: 'Icon' },
                                 type: 'Image',
+                                options: {
+                                    nullable: true,
+                                },
                                 /* wwEditor:start */
                                 bindingValidation: {
                                     type: 'string',
