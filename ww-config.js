@@ -382,7 +382,7 @@ export default {
             /* wwEditor:start */
             hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
-            defaultValue: '41px',
+            defaultValue: 'auto',
             responsive: true,
             bindable: true,
             states: true,
@@ -614,7 +614,7 @@ export default {
                                     tooltip: 'A string that represents a length in px`',
                                 },
                                 /* wwEditor:end */
-                                defaultValue: '41px',
+                                defaultValue: 'auto',
                                 responsive: true,
                                 bindable: true,
                                 states: true,

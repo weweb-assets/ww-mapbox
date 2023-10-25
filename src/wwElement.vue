@@ -146,7 +146,7 @@ export default {
                 icon: this.content.customMarker ? {
                     img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
                     height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
-                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || 'auto'
+                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '27px'
                 } : null,
                 rawData: marker,
             }));
