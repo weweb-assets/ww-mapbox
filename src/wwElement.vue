@@ -145,8 +145,8 @@ export default {
                 },
                 icon: this.content.customMarker ? {
                     img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
-                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 41,
-                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || 27
+                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
+                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || 'auto'
                 } : null,
                 rawData: marker,
             }));
@@ -357,13 +357,11 @@ export default {
             }
 
             for (const marker of this.markers) {
-                const el = document.createElement('div');
+                const el = document.createElement('img');
                 el.className = 'marker';
-                el.style.backgroundImage = this.formatUrl(marker.icon?.img);
-                el.style.width = `${marker.icon?.width || '27px'}`;
-                el.style.height = `${marker.icon?.height || '41px'}`;
-                el.style.backgroundSize = '100%';
-                el.style.backgroundRepeat = 'no-repeat';
+                el.src = this.formatUrl(marker.icon?.img);
+                el.style.width = marker.icon?.width;
+                el.style.height = marker.icon?.height;
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
@@ -443,7 +441,7 @@ export default {
         },
         formatUrl(url) {
             if(typeof url !== 'string') return null
-            return url.startsWith('designs/') ? `url(${wwLib.wwUtils.getCdnPrefix()}${url})` : `url(${url})`
+            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`
         },
         formatLayer(layer) {
             const _layer = { ...layer };
