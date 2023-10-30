@@ -566,6 +566,9 @@ export default {
                             color: {
                                 label: { en: 'Color' },
                                 type: 'Color',
+                                /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => content.customMarker,
+                                /* wwEditor:end */
                             },
                             draggable: {
                                 label: { en: 'Draggable' },
@@ -578,6 +581,7 @@ export default {
                                     nullable: true,
                                 },
                                 /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
                                 bindingValidation: {
                                     type: 'string',
                                     tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
@@ -596,6 +600,7 @@ export default {
                                     noRange: true,
                                 },
                                 /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
                                 bindingValidation: {
                                     type: 'string',
                                     tooltip: 'A string that represents a length in px`',
@@ -618,6 +623,7 @@ export default {
                                     noRange: true,
                                 },
                                 /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
                                 bindingValidation: {
                                     type: 'string',
                                     tooltip: 'A string that represents a length in px`',
