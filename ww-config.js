@@ -17,8 +17,8 @@ export default {
                 'markersColorField',
                 'markersDraggableField',
                 'markersIconField',
-                'markersHeightField',
                 'markersWidthField',
+                'markersHeightField',
             ],
             'advancedOptions',
             [
@@ -318,7 +318,7 @@ export default {
             defaultValue: 'bottom-left',
         },
         customMarker: {
-            label: 'Custom marker',
+            label: 'Custom marker icon',
             type: 'OnOff',
             defaultValue: false,
         },
@@ -363,7 +363,7 @@ export default {
             /* wwEditor:start */
             hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
             /* wwEditor:end */
-            defaultValue: '27px',
+            defaultValue: '40px',
             responsive: true,
             bindable: true,
             states: true,
@@ -563,11 +563,6 @@ export default {
                                 type: 'Text',
                                 options: { placeholder: 'Longitude' },
                             },
-                            lng: {
-                                label: { en: 'Longitude' },
-                                type: 'Text',
-                                options: { placeholder: 'Longitude' },
-                            },
                             color: {
                                 label: { en: 'Color' },
                                 type: 'Color',
@@ -575,6 +570,20 @@ export default {
                             draggable: {
                                 label: { en: 'Draggable' },
                                 type: 'OnOff',
+                            },
+                            icon: {
+                                label: { en: 'Icon' },
+                                type: 'Image',
+                                options: {
+                                    nullable: true,
+                                },
+                                /* wwEditor:start */
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
+                                },
+                                /* wwEditor:end */
+                                bindable: true,
                             },
                             width: {
                                 label: { en: 'Width' },
@@ -619,20 +628,6 @@ export default {
                                 bindable: true,
                                 states: true,
                                 classes: true,
-                            },
-                            icon: {
-                                label: { en: 'Icon' },
-                                type: 'Image',
-                                options: {
-                                    nullable: true,
-                                },
-                                /* wwEditor:start */
-                                bindingValidation: {
-                                    type: 'string',
-                                    tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
-                                },
-                                /* wwEditor:end */
-                                bindable: true,
                             },
                         },
                     },
@@ -774,11 +769,11 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
-        markersHeightField: {
+        markersWidthField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
             label: {
-                en: 'Marker height',
-                fr: 'Marker height',
+                en: 'Marker width',
+                fr: 'Marker width',
             },
             type: 'ObjectPropertyPath',
             options: content => {
@@ -791,11 +786,11 @@ export default {
             defaultValue: null,
             section: 'settings',
         },
-        markersWidthField: {
+        markersHeightField: {
             hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
             label: {
-                en: 'Marker width',
-                fr: 'Marker width',
+                en: 'Marker height',
+                fr: 'Marker height',
             },
             type: 'ObjectPropertyPath',
             options: content => {
