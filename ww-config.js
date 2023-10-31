@@ -725,7 +725,7 @@ export default {
             section: 'settings',
         },
         markersColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || content.customMarker,
             label: {
                 en: 'Marker color',
                 fr: 'Marker color',
@@ -759,7 +759,7 @@ export default {
             section: 'settings',
         },
         markersIconField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
             label: {
                 en: 'Marker icon',
                 fr: 'Marker icon',
@@ -776,7 +776,7 @@ export default {
             section: 'settings',
         },
         markersWidthField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
             label: {
                 en: 'Marker width',
                 fr: 'Marker width',
@@ -793,7 +793,7 @@ export default {
             section: 'settings',
         },
         markersHeightField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
             label: {
                 en: 'Marker height',
                 fr: 'Marker height',
