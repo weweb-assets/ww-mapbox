@@ -16,6 +16,9 @@ export default {
                 'markersLngField',
                 'markersColorField',
                 'markersDraggableField',
+                'markersIconField',
+                'markersWidthField',
+                'markersHeightField',
             ],
             'advancedOptions',
             [
@@ -314,6 +317,11 @@ export default {
             },
             defaultValue: 'bottom-left',
         },
+        customMarker: {
+            label: 'Custom marker icon',
+            type: 'OnOff',
+            defaultValue: false,
+        },
         defaultMarkerColor: {
             label: {
                 en: 'Default Markers color',
@@ -325,6 +333,60 @@ export default {
             states: true,
             classes: true,
             responsive: true,
+            hidden: (content, _sidepanelContent, boundProps) => content.customMarker,
+        },
+        defaultMarkerIcon: {
+            label: 'Default Markers Icon',
+            type: 'Image',
+            options: {
+                nullable: true,
+            },
+            bindable: true,
+            /* wwEditor:start */
+            bindingValidation: {
+                type: 'string',
+                tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
+            },
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+            /* wwEditor:end */
+        },
+        defaultMarkerWidth: {
+            label: 'Default Markers Width',
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'auto', label: 'auto', default: true },
+                    { value: 'px', label: 'px', min: 1, max: 300 }
+                ],
+                noRange: true,
+            },
+            /* wwEditor:start */
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+            /* wwEditor:end */
+            defaultValue: '40px',
+            responsive: true,
+            bindable: true,
+            states: true,
+            classes: true,
+        },
+        defaultMarkerHeight: {
+            label: 'Default Markers Height',
+            type: 'Length',
+            options: {
+                unitChoices: [
+                    { value: 'auto', label: 'auto', default: true },
+                    { value: 'px', label: 'px', min: 1, max: 300 }
+                ],
+                noRange: true,
+            },
+            /* wwEditor:start */
+            hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+            /* wwEditor:end */
+            defaultValue: 'auto',
+            responsive: true,
+            bindable: true,
+            states: true,
+            classes: true,
         },
         disablePopups: {
             label: {
@@ -501,18 +563,77 @@ export default {
                                 type: 'Text',
                                 options: { placeholder: 'Longitude' },
                             },
-                            lng: {
-                                label: { en: 'Longitude' },
-                                type: 'Text',
-                                options: { placeholder: 'Longitude' },
-                            },
                             color: {
                                 label: { en: 'Color' },
                                 type: 'Color',
+                                /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => content.customMarker,
+                                /* wwEditor:end */
                             },
                             draggable: {
                                 label: { en: 'Draggable' },
                                 type: 'OnOff',
+                            },
+                            icon: {
+                                label: { en: 'Icon' },
+                                type: 'Image',
+                                options: {
+                                    nullable: true,
+                                },
+                                /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents the image url: `"https://.../.../my_image.png"`',
+                                },
+                                /* wwEditor:end */
+                                bindable: true,
+                            },
+                            width: {
+                                label: { en: 'Width' },
+                                type: 'Length',
+                                options: {
+                                    unitChoices: [
+                                        { value: 'auto', label: 'auto', default: true },
+                                        { value: 'px', label: 'px', min: 1, max: 300 }
+                                    ],
+                                    noRange: true,
+                                },
+                                /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents a length in px`',
+                                },
+                                /* wwEditor:end */
+                                defaultValue: '27px',
+                                responsive: true,
+                                bindable: true,
+                                states: true,
+                                classes: true,
+                            },
+                            height: {
+                                label: { en: 'Height' },
+                                type: 'Length',
+                                options: {
+                                    unitChoices: [
+                                        { value: 'auto', label: 'auto', default: true },
+                                        { value: 'px', label: 'px', min: 1, max: 300 }
+                                    ],
+                                    noRange: true,
+                                },
+                                /* wwEditor:start */
+                                hidden: (content, _sidepanelContent, boundProps) => !content.customMarker,
+                                bindingValidation: {
+                                    type: 'string',
+                                    tooltip: 'A string that represents a length in px`',
+                                },
+                                /* wwEditor:end */
+                                defaultValue: 'auto',
+                                responsive: true,
+                                bindable: true,
+                                states: true,
+                                classes: true,
                             },
                         },
                     },
@@ -604,7 +725,7 @@ export default {
             section: 'settings',
         },
         markersColorField: {
-            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers,
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || content.customMarker,
             label: {
                 en: 'Marker color',
                 fr: 'Marker color',
@@ -625,6 +746,57 @@ export default {
             label: {
                 en: 'Marker draggable',
                 fr: 'Marker draggable',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersIconField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
+            label: {
+                en: 'Marker icon',
+                fr: 'Marker icon',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersWidthField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
+            label: {
+                en: 'Marker width',
+                fr: 'Marker width',
+            },
+            type: 'ObjectPropertyPath',
+            options: content => {
+                if (!content.markers.length || typeof content.markers[0] !== 'object') {
+                    return null;
+                }
+
+                return { object: content.markers[0] };
+            },
+            defaultValue: null,
+            section: 'settings',
+        },
+        markersHeightField: {
+            hidden: (content, sidepanelContent, boundProps) => !boundProps.markers || !content.markers || !content.customMarker,
+            label: {
+                en: 'Marker height',
+                fr: 'Marker height',
             },
             type: 'ObjectPropertyPath',
             options: content => {

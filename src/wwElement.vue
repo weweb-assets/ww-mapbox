@@ -27,6 +27,9 @@ const DEFAULT_MARKERS_LAT_FIELD = 'lat';
 const DEFAULT_MARKERS_LNG_FIELD = 'lng';
 const DEFAULT_MARKERS_COLOR_FIELD = 'color';
 const DEFAULT_MARKERS_DRAGGABLE_FIELD = 'draggable';
+const DEFAULT_MARKERS_ICON_FIELD = 'icon';
+const DEFAULT_MARKERS_HEIGHT_FIELD = 'height';
+const DEFAULT_MARKERS_WIDTH_FIELD = 'width';
 
 const DEFAULT_LAYERS_ID_FIELD = 'id';
 const DEFAULT_LAYERS_TYPE_FIELD = 'type';
@@ -122,6 +125,9 @@ export default {
             const lngField = this.content.markersLngField || DEFAULT_MARKERS_LNG_FIELD;
             const colorField = this.content.markersColorField || DEFAULT_MARKERS_COLOR_FIELD;
             const draggableField = this.content.markersDraggableField || DEFAULT_MARKERS_DRAGGABLE_FIELD;
+            const iconField = this.content.markersIconField || DEFAULT_MARKERS_ICON_FIELD;
+            const heightField = this.content.markersHeightField || DEFAULT_MARKERS_HEIGHT_FIELD;
+            const widthField = this.content.markersWidthField || DEFAULT_MARKERS_WIDTH_FIELD;
 
             const data = wwLib.wwCollection.getCollectionData(this.content.markers);
             if (!Array.isArray(data)) return [];
@@ -137,6 +143,11 @@ export default {
                     lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
                     lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
+                icon: this.content.customMarker ? {
+                    img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
+                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
+                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '40px'
+                } : null,
                 rawData: marker,
             }));
         },
@@ -346,19 +357,28 @@ export default {
             }
 
             for (const marker of this.markers) {
+                const el = document.createElement('img');
+                el.className = 'marker';
+                el.src = this.formatUrl(marker.icon?.img);
+                el.style.width = marker.icon?.width;
+                el.style.height = marker.icon?.height;
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
+                    element: marker.icon ? el : undefined
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
                 if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
+
                 _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
                 _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
                 _marker.getElement().addEventListener('mouseleave', (e) => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
+
+
                 this.markerInstances.push(_marker);
             }
 
@@ -418,6 +438,10 @@ export default {
             delete _source.options;
             if (['geojson', 'video'].includes(_source.type)) delete _source.url;
             return _source;
+        },
+        formatUrl(url) {
+            if(typeof url !== 'string') return null
+            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`
         },
         formatLayer(layer) {
             const _layer = { ...layer };
