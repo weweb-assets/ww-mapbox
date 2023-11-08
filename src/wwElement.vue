@@ -255,8 +255,9 @@ export default {
             this.map.setStyle(value);
         },
         center(value) {
-            if (!this.map) return;
-            this.map.setCenter(value);
+            console.log('center', value);
+            // if (!this.map) return;
+            // this.map.setCenter(value);
         },
         markers() {
             this.loadMarkers();
@@ -297,7 +298,10 @@ export default {
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
-            this.map.on('move', () => this.setCenter(this.map.getCenter()));
+            this.map.on('move', () => {
+                console.log('move');
+                // this.setCenter(this.map.getCenter());
+            });
             this.map.on('click', this.handleMapClick);
             this.map.on('movestart', this.handleMapMove);
             this.map.on('moveend', this.handleMapMove);
