@@ -342,7 +342,7 @@ export default {
                 console.log('dragend');
                 this.handleMapMove();
             });
-            // this.loadMarkers();
+            this.loadMarkers();
 
             this.map.on('load', () => {
                 this.refreshSourcesAndLayers({ newSources: this.sources, newLayers: this.layers });
