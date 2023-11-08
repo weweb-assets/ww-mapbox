@@ -302,16 +302,16 @@ export default {
                 attributionControl: false,
             });
             this.setMap(markRaw(this.map));
-            // this.map.on('load', () => this.fireEvent('map:load'));
-            // this.map.on('render', () => this.fireEvent('map:render'));
-            // this.map.on('idle', () => this.fireEvent('map:idle'));
-            // this.map.on('style.load', () => {
-            //     this.map.setFog({}); // Set the default atmosphere style
-            // });
-            // this.map.on('move', () => {
-            //     console.log('move');
-            //     // this.setCenter(this.map.getCenter());
-            // });
+            this.map.on('load', () => this.fireEvent('map:load'));
+            this.map.on('render', () => this.fireEvent('map:render'));
+            this.map.on('idle', () => this.fireEvent('map:idle'));
+            this.map.on('style.load', () => {
+                this.map.setFog({}); // Set the default atmosphere style
+            });
+            this.map.on('move', () => {
+                console.log('move');
+                // this.setCenter(this.map.getCenter());
+            });
             // this.map.on('click', this.handleMapClick);
             // this.map.on('movestart', this.handleMapMove);
             // this.map.on('moveend', this.handleMapMove);
