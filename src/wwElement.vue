@@ -100,13 +100,13 @@ export default {
             error: '',
         };
     },
-    mounted() {
-        this.mapContainerId = this.$el.id && this.$el.id != '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid();
+    // mounted() {
+    //     this.mapContainerId = this.$el.id && this.$el.id != '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid();
 
-        if (window.__WW_IS_PRERENDER__) return;
+    //     if (window.__WW_IS_PRERENDER__) return;
 
-        setTimeout(this.loadMap, 1);
-    },
+    //     setTimeout(this.loadMap, 1);
+    // },
     computed: {
         mapStyle() {
             return this.content.mapStyle || this.content.styleUrl;
