@@ -193,6 +193,7 @@ export default {
             const data = wwLib.wwCollection.getCollectionData(this.content.layers);
             if (!Array.isArray(data)) return [];
 
+            console.log(data);
             return data.map(layer => ({
                 id: wwLib.resolveObjectPropertyPath(layer, layersIdField) || '',
                 type: wwLib.resolveObjectPropertyPath(layer, layersTypeField) || '',
@@ -208,79 +209,79 @@ export default {
         },
     },
     watch: {
-        // /* wwEditor:start */
-        // 'content.logoPosition'() {
-        //     this.loadMap();
-        // },
-        // 'wwEditorState.boundProps.markers'(isBind) {
-        //     if (!isBind)
-        //         this.$emit('update:content:effect', {
-        //             markersContentField: null,
-        //             markersLatField: null,
-        //             markersLngField: null,
-        //             markersColorField: null,
-        //             markersDraggableField: null,
-        //         });
-        // },
-        // 'wwEditorState.boundProps.sources'(isBind) {
-        //     if (!isBind)
-        //         this.$emit('update:content:effect', {
-        //             sourcesIdField: null,
-        //             sourcesTypeField: null,
-        //             sourcesOptionsField: null,
-        //         });
-        // },
-        // 'wwEditorState.boundProps.layers'(isBind) {
-        //     if (!isBind)
-        //         this.$emit('update:content:effect', {
-        //             layersIdField: null,
-        //             layersTypeField: null,
-        //             layersSourceField: null,
-        //             layersSourceLayerField: null,
-        //             layersOptionsField: null,
-        //         });
-        // },
-        // /* wwEditor:end */
-        // 'content.apiAccessToken'(value) {
-        //     if (!value) return;
-        //     this.componentKey += 1;
-        //     this.$nextTick(() => {
-        //         this.loadMap();
-        //     });
-        // },
-        // 'content.zoom'(value) {
-        //     if (!this.map) return;
-        //     this.map.setZoom(value);
-        // },
-        // 'content.mapProjection'(value) {
-        //     if (!this.map) return;
-        //     this.map.setProjection(value);
-        // },
-        // 'content.fixedBounds'(value) {
-        //     if (!this.map) return;
-        //     if (value) this.fitMarkersBounds();
-        // },
-        // mapStyle(value) {
-        //     if (!this.map) return;
-        //     this.map.setStyle(value);
-        // },
-        // center(value) {
-        //     console.log('center', value);
-        //     // if (!this.map) return;
-        //     // this.map.setCenter(value);
-        // },
-        // markers() {
-        //     this.loadMarkers();
-        // },
-        // popupOptions() {
-        //     this.loadMarkers();
-        // },
-        // sources(newSources, oldSources) {
-        //     this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
-        // },
-        // layers(newLayers, oldLayers) {
-        //     this.refreshSourcesAndLayers({ newLayers, oldLayers, newSources: this.sources, oldSources: this.sources });
-        // },
+        /* wwEditor:start */
+        'content.logoPosition'() {
+            this.loadMap();
+        },
+        'wwEditorState.boundProps.markers'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    markersContentField: null,
+                    markersLatField: null,
+                    markersLngField: null,
+                    markersColorField: null,
+                    markersDraggableField: null,
+                });
+        },
+        'wwEditorState.boundProps.sources'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    sourcesIdField: null,
+                    sourcesTypeField: null,
+                    sourcesOptionsField: null,
+                });
+        },
+        'wwEditorState.boundProps.layers'(isBind) {
+            if (!isBind)
+                this.$emit('update:content:effect', {
+                    layersIdField: null,
+                    layersTypeField: null,
+                    layersSourceField: null,
+                    layersSourceLayerField: null,
+                    layersOptionsField: null,
+                });
+        },
+        /* wwEditor:end */
+        'content.apiAccessToken'(value) {
+            if (!value) return;
+            this.componentKey += 1;
+            this.$nextTick(() => {
+                this.loadMap();
+            });
+        },
+        'content.zoom'(value) {
+            if (!this.map) return;
+            this.map.setZoom(value);
+        },
+        'content.mapProjection'(value) {
+            if (!this.map) return;
+            this.map.setProjection(value);
+        },
+        'content.fixedBounds'(value) {
+            if (!this.map) return;
+            if (value) this.fitMarkersBounds();
+        },
+        mapStyle(value) {
+            if (!this.map) return;
+            this.map.setStyle(value);
+        },
+        center(value) {
+            console.log('center', value);
+            // if (!this.map) return;
+            // this.map.setCenter(value);
+        },
+        markers() {
+            this.loadMarkers();
+        },
+        popupOptions() {
+            this.loadMarkers();
+        },
+        sources(newSources, oldSources) {
+            this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
+        },
+        layers(newLayers, oldLayers) {
+            this.refreshSourcesAndLayers({ newLayers, oldLayers, newSources: this.sources, oldSources: this.sources });
+        },
     },
     methods: {
         loadMap() {
@@ -364,8 +365,8 @@ export default {
                 marker.remove();
             }
 
+            console.log(this.markers);
             for (const marker of this.markers) {
-                debugger;
                 const el = document.createElement('img');
                 el.className = 'marker';
                 el.src = this.formatUrl(marker.icon?.img);
