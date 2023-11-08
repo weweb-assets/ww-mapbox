@@ -60,16 +60,16 @@ export default {
     emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
         const center = computed(() => {
-            const lng = Number(props.content.lng)
-            const lat = Number(props.content.lat)
+            const lng = Number(props.content.lng);
+            const lat = Number(props.content.lat);
             return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
-        })
+        });
 
         const { value: variableCenter, setValue: setCenter } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'center',
             type: 'object',
-            defaultValue: {lng: center.value[0], lat: center.value[1]},
+            defaultValue: { lng: center.value[0], lat: center.value[1] },
             readonly: true,
         });
 
@@ -91,7 +91,7 @@ export default {
             variableCenter,
             setCenter,
             variableMap,
-            setMap
+            setMap,
         };
     },
     data() {
@@ -101,7 +101,7 @@ export default {
         };
     },
     mounted() {
-        this.mapContainerId = this.$el.id && this.$el.id!= '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid()
+        this.mapContainerId = this.$el.id && this.$el.id != '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid();
 
         if (window.__WW_IS_PRERENDER__) return;
 
@@ -116,8 +116,8 @@ export default {
                 closeButton: !this.content.popupHideCloseButton,
                 closeOnClick: !this.content.popupStayOpenOnClick,
                 closeOnMove: this.content.popupCloseOnMove,
-                maxWidth:this.content.popupMaxWidth || '240px',
-            }
+                maxWidth: this.content.popupMaxWidth || '240px',
+            };
         },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
@@ -143,11 +143,22 @@ export default {
                     lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
                     lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
-                icon: this.content.customMarker ? {
-                    img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
-                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
-                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '40px'
-                } : null,
+                icon: this.content.customMarker
+                    ? {
+                          img:
+                              wwLib.resolveObjectPropertyPath(marker, iconField) ||
+                              this.content.defaultMarkerIcon ||
+                              null,
+                          height:
+                              wwLib.resolveObjectPropertyPath(marker, heightField) ||
+                              this.content.defaultMarkerHeight ||
+                              'auto',
+                          width:
+                              wwLib.resolveObjectPropertyPath(marker, widthField) ||
+                              this.content.defaultMarkerWidth ||
+                              '40px',
+                      }
+                    : null,
                 rawData: marker,
             }));
         },
@@ -197,88 +208,87 @@ export default {
         },
     },
     watch: {
-        /* wwEditor:start */
-        'content.logoPosition'() {
-            this.loadMap();
-        },
-        'wwEditorState.boundProps.markers'(isBind) {
-            if (!isBind)
-                this.$emit('update:content:effect', {
-                    markersContentField: null,
-                    markersLatField: null,
-                    markersLngField: null,
-                    markersColorField: null,
-                    markersDraggableField: null,
-                });
-        },
-        'wwEditorState.boundProps.sources'(isBind) {
-            if (!isBind)
-                this.$emit('update:content:effect', {
-                    sourcesIdField: null,
-                    sourcesTypeField: null,
-                    sourcesOptionsField: null,
-                });
-        },
-        'wwEditorState.boundProps.layers'(isBind) {
-            if (!isBind)
-                this.$emit('update:content:effect', {
-                    layersIdField: null,
-                    layersTypeField: null,
-                    layersSourceField: null,
-                    layersSourceLayerField: null,
-                    layersOptionsField: null,
-                });
-        },
-        /* wwEditor:end */
-        'content.apiAccessToken'(value) {
-            if (!value) return;
-
-            this.componentKey += 1;
-            this.$nextTick(() => {
-                this.loadMap();
-            });
-        },
-        'content.zoom'(value) {
-            if (!this.map) return;
-            this.map.setZoom(value);
-        },
-        'content.mapProjection'(value) {
-            if (!this.map) return;
-            this.map.setProjection(value);
-        },
-        'content.fixedBounds'(value) {
-            if (!this.map) return;
-            if (value) this.fitMarkersBounds();
-        },
-        mapStyle(value) {
-            if (!this.map) return;
-            this.map.setStyle(value);
-        },
-        center(value) {
-            console.log('center', value);
-            // if (!this.map) return;
-            // this.map.setCenter(value);
-        },
-        markers() {
-            this.loadMarkers();
-        },
-        popupOptions() {
-            this.loadMarkers();
-        },
-        sources(newSources, oldSources) {
-            this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
-        },
-        layers(newLayers, oldLayers) {
-            this.refreshSourcesAndLayers({ newLayers, oldLayers, newSources: this.sources, oldSources: this.sources });
-        },
+        // /* wwEditor:start */
+        // 'content.logoPosition'() {
+        //     this.loadMap();
+        // },
+        // 'wwEditorState.boundProps.markers'(isBind) {
+        //     if (!isBind)
+        //         this.$emit('update:content:effect', {
+        //             markersContentField: null,
+        //             markersLatField: null,
+        //             markersLngField: null,
+        //             markersColorField: null,
+        //             markersDraggableField: null,
+        //         });
+        // },
+        // 'wwEditorState.boundProps.sources'(isBind) {
+        //     if (!isBind)
+        //         this.$emit('update:content:effect', {
+        //             sourcesIdField: null,
+        //             sourcesTypeField: null,
+        //             sourcesOptionsField: null,
+        //         });
+        // },
+        // 'wwEditorState.boundProps.layers'(isBind) {
+        //     if (!isBind)
+        //         this.$emit('update:content:effect', {
+        //             layersIdField: null,
+        //             layersTypeField: null,
+        //             layersSourceField: null,
+        //             layersSourceLayerField: null,
+        //             layersOptionsField: null,
+        //         });
+        // },
+        // /* wwEditor:end */
+        // 'content.apiAccessToken'(value) {
+        //     if (!value) return;
+        //     this.componentKey += 1;
+        //     this.$nextTick(() => {
+        //         this.loadMap();
+        //     });
+        // },
+        // 'content.zoom'(value) {
+        //     if (!this.map) return;
+        //     this.map.setZoom(value);
+        // },
+        // 'content.mapProjection'(value) {
+        //     if (!this.map) return;
+        //     this.map.setProjection(value);
+        // },
+        // 'content.fixedBounds'(value) {
+        //     if (!this.map) return;
+        //     if (value) this.fitMarkersBounds();
+        // },
+        // mapStyle(value) {
+        //     if (!this.map) return;
+        //     this.map.setStyle(value);
+        // },
+        // center(value) {
+        //     console.log('center', value);
+        //     // if (!this.map) return;
+        //     // this.map.setCenter(value);
+        // },
+        // markers() {
+        //     this.loadMarkers();
+        // },
+        // popupOptions() {
+        //     this.loadMarkers();
+        // },
+        // sources(newSources, oldSources) {
+        //     this.refreshSourcesAndLayers({ newSources, oldSources, newLayers: this.layers, oldLayers: this.layers });
+        // },
+        // layers(newLayers, oldLayers) {
+        //     this.refreshSourcesAndLayers({ newLayers, oldLayers, newSources: this.sources, oldSources: this.sources });
+        // },
     },
     methods: {
         loadMap() {
             this.error = '';
             if (!this.content.apiAccessToken) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
-            const mapEl = document.getElementById(this.mapContainerId)
-            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl)
+            const mapEl = document.getElementById(this.mapContainerId);
+            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl);
             if (mapEl) mapEl.innerHTML = '';
             this.map = new mapboxgl.Map({
                 container: this.mapContainerId,
@@ -291,7 +301,7 @@ export default {
                 logoPosition: this.content.logoPosition,
                 attributionControl: false,
             });
-            this.setMap(markRaw(this.map))
+            this.setMap(markRaw(this.map));
             this.map.on('load', () => this.fireEvent('map:load'));
             this.map.on('render', () => this.fireEvent('map:render'));
             this.map.on('idle', () => this.fireEvent('map:idle'));
@@ -320,8 +330,7 @@ export default {
                 this.map && this.map.resize && this.map.resize();
                 if (this.content.fixedBounds) this.fitMarkersBounds();
             });
-            this.resizeObserver.observe(mapEl)
-
+            this.resizeObserver.observe(mapEl);
         },
         refreshSourcesAndLayers({ newSources = [], oldSources = [], newLayers = [], oldLayers = [] }) {
             if (!this.map) return;
@@ -369,19 +378,19 @@ export default {
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
-                    element: marker.icon ? el : undefined
+                    element: marker.icon ? el : undefined,
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
-                if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
+                if (marker.content && !this.content.disablePopups)
+                    _marker.setPopup(new mapboxgl.Popup({ ...this.popupOptions }).setHTML(marker.content));
 
-                _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
-                _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
-                _marker.getElement().addEventListener('mouseleave', (e) => this.handleMarkerMouseout(marker, e));
+                _marker.getElement().addEventListener('click', e => this.handleMarkerClick(marker, e));
+                _marker.getElement().addEventListener('mouseenter', e => this.handleMarkerMouseover(marker, e));
+                _marker.getElement().addEventListener('mouseleave', e => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
-
 
                 this.markerInstances.push(_marker);
             }
@@ -444,8 +453,8 @@ export default {
             return _source;
         },
         formatUrl(url) {
-            if(typeof url !== 'string') return null
-            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`
+            if (typeof url !== 'string') return null;
+            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`;
         },
         formatLayer(layer) {
             const _layer = { ...layer };
