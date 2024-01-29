@@ -385,7 +385,7 @@ export default {
             if (this.content.fixedBounds) this.fitMarkersBounds();
         },
         fitMarkersBounds() {
-            if (!this.map || !this.markers.length > 1) return;
+            if (!this.map) return;
             const baseBounds = new mapboxgl.LngLatBounds(
                 [this.markers[0].position.lng, this.markers[0].position.lat],
                 [this.markers[0].position.lng, this.markers[0].position.lat]
@@ -395,6 +395,9 @@ export default {
             }, baseBounds);
 
             this.map.fitBounds(bounds, { padding: 20 });
+            if(this.markers.length <= 1) {
+                this.map.setZoom(this.content.zoom)
+            };
         },
         handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
