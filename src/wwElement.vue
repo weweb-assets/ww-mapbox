@@ -388,8 +388,7 @@ export default {
             if (!this.map) return;
             // Apply a default zoom if there is only one marker
             if(this.markers.length <= 1) {
-                this.map.setCenter(this.markers[0].position)
-                this.map.setZoom(this.content.zoom)
+                this.map.jumpTo({center: this.markers[0].position, zoom: this.content.zoom})
                 return
             }
             const baseBounds = new mapboxgl.LngLatBounds(
