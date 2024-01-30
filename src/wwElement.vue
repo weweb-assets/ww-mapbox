@@ -394,10 +394,7 @@ export default {
                 return bounds.extend([marker.position.lng, marker.position.lat]);
             }, baseBounds);
 
-            this.map.fitBounds(bounds, { padding: 20 });
-            if(this.markers.length <= 1) {
-                this.map.setZoom(this.content.zoom)
-            };
+            this.map.fitBounds(bounds, { padding: 20, maxZoom: this.markers.length <= 1 ? this.content.zoom : null });
         },
         handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
