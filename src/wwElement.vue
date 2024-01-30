@@ -386,6 +386,12 @@ export default {
         },
         fitMarkersBounds() {
             if (!this.map) return;
+            // Apply a default zoom if there is only one marker
+            if(this.markers.length <= 1) {
+                this.map.setCenter(this.markers[0].position)
+                this.map.setZoom(this.content.zoom)
+                return
+            }
             const baseBounds = new mapboxgl.LngLatBounds(
                 [this.markers[0].position.lng, this.markers[0].position.lat],
                 [this.markers[0].position.lng, this.markers[0].position.lat]
@@ -394,11 +400,7 @@ export default {
                 return bounds.extend([marker.position.lng, marker.position.lat]);
             }, baseBounds);
 
-            this.map.fitBounds(bounds, { 
-                padding: 20, 
-                // Apply a default zoom if there is only one marker
-                ...(this.markers.length <= 1 ? { maxZoom: this.content.zoom } : {}) 
-            });
+            this.map.fitBounds(bounds, { padding: 20 });
         },
         handleMarkerClick(marker, domEvent) {
             this.$emit('trigger-event', {
