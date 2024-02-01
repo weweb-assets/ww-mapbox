@@ -385,7 +385,12 @@ export default {
             if (this.content.fixedBounds) this.fitMarkersBounds();
         },
         fitMarkersBounds() {
-            if (!this.map || !this.markers.length) return;
+            if (!this.map) return;
+            // Apply a default zoom if there is only one marker
+            if(this.markers.length <= 1) {
+                this.map.flyTo({center: this.markers[0].position, zoom: this.content.zoom})
+                return
+            }
             const baseBounds = new mapboxgl.LngLatBounds(
                 [this.markers[0].position.lng, this.markers[0].position.lat],
                 [this.markers[0].position.lng, this.markers[0].position.lat]
