@@ -79,6 +79,7 @@ export default {
             type: 'object',
             defaultValue: null,
             labelOnly: '{Map Instance}',
+            preserveReference: true,
             readonly: true,
         });
 
