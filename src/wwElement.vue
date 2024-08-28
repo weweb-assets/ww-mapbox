@@ -388,7 +388,7 @@ export default {
         fitMarkersBounds() {
             if (!this.map) return;
             // Apply a default zoom if there is only one marker
-            if(this.markers.length <= 1) {
+            if(this.markers.length === 1) {
                 this.map.flyTo({center: this.markers[0].position, zoom: this.content.zoom})
                 return
             }
