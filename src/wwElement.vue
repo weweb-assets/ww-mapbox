@@ -452,6 +452,13 @@ export default {
         formatLayer(layer) {
             const _layer = { ...layer };
             if (!_layer.filter) delete _layer.filter;
+            
+            // Transform sourceLayer to source-layer (Mapbox expects kebab-case)
+            if (_layer.sourceLayer) {
+                _layer['source-layer'] = _layer.sourceLayer;
+                delete _layer.sourceLayer;
+            }
+            
             return _layer;
         },
         fireEvent(eventName) {
