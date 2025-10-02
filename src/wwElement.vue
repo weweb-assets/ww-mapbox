@@ -456,7 +456,7 @@ export default {
             // Transform sourceLayer to source-layer (Mapbox expects kebab-case)
             if (_layer.sourceLayer) {
                 _layer['source-layer'] = _layer.sourceLayer;
-                delete _layer.sourceLayer;
+                // delete _layer.sourceLayer; Keep _layer.sourceLayer for now to avoid breaking changes
             }
             
             return _layer;
