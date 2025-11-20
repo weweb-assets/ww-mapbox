@@ -60,16 +60,16 @@ export default {
     emits: ['trigger-event', 'update:content:effect'],
     setup(props) {
         const center = computed(() => {
-            const lng = Number(props.content.lng)
-            const lat = Number(props.content.lat)
+            const lng = Number(props.content.lng);
+            const lat = Number(props.content.lat);
             return [isNaN(lng) ? 0 : lng, isNaN(lat) ? 0 : lat];
-        })
+        });
 
         const { value: variableCenter, setValue: setCenter } = wwLib.wwVariable.useComponentVariable({
             uid: props.uid,
             name: 'center',
             type: 'object',
-            defaultValue: {lng: center.value[0], lat: center.value[1]},
+            defaultValue: { lng: center.value?.[0], lat: center.value?.[1] },
             readonly: true,
         });
 
@@ -92,7 +92,7 @@ export default {
             variableCenter,
             setCenter,
             variableMap,
-            setMap
+            setMap,
         };
     },
     data() {
@@ -102,7 +102,7 @@ export default {
         };
     },
     mounted() {
-        this.mapContainerId = this.$el.id && this.$el.id!= '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid()
+        this.mapContainerId = this.$el.id && this.$el.id != '' ? this.$el.id : 'ww-mapbox-' + wwLib.wwUtils.getUid();
 
         if (window.__WW_IS_PRERENDER__) return;
 
@@ -117,8 +117,8 @@ export default {
                 closeButton: !this.content.popupHideCloseButton,
                 closeOnClick: !this.content.popupStayOpenOnClick,
                 closeOnMove: this.content.popupCloseOnMove,
-                maxWidth:this.content.popupMaxWidth || '240px',
-            }
+                maxWidth: this.content.popupMaxWidth || '240px',
+            };
         },
         markers() {
             const contentField = this.content.markersContentField || DEFAULT_MARKERS_CONTENT_FIELD;
@@ -144,11 +144,22 @@ export default {
                     lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
                     lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
-                icon: this.content.customMarker ? {
-                    img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
-                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
-                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '40px'
-                } : null,
+                icon: this.content.customMarker
+                    ? {
+                          img:
+                              wwLib.resolveObjectPropertyPath(marker, iconField) ||
+                              this.content.defaultMarkerIcon ||
+                              null,
+                          height:
+                              wwLib.resolveObjectPropertyPath(marker, heightField) ||
+                              this.content.defaultMarkerHeight ||
+                              'auto',
+                          width:
+                              wwLib.resolveObjectPropertyPath(marker, widthField) ||
+                              this.content.defaultMarkerWidth ||
+                              '40px',
+                      }
+                    : null,
                 rawData: marker,
             }));
         },
@@ -277,8 +288,8 @@ export default {
             this.error = '';
             if (!this.content.apiAccessToken) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
-            const mapEl = document.getElementById(this.mapContainerId)
-            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl)
+            const mapEl = document.getElementById(this.mapContainerId);
+            if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl);
             if (mapEl) mapEl.innerHTML = '';
             this.map = new mapboxgl.Map({
                 container: this.mapContainerId,
@@ -291,7 +302,7 @@ export default {
                 logoPosition: this.content.logoPosition,
                 attributionControl: false,
             });
-            this.setMap(markRaw(this.map))
+            this.setMap(markRaw(this.map));
             this.map.on('load', () => this.fireEvent('map:load'));
             this.map.on('render', () => this.fireEvent('map:render'));
             this.map.on('idle', () => this.fireEvent('map:idle'));
@@ -317,8 +328,7 @@ export default {
                 this.map && this.map.resize && this.map.resize();
                 if (this.content.fixedBounds) this.fitMarkersBounds();
             });
-            this.resizeObserver.observe(mapEl)
-
+            this.resizeObserver.observe(mapEl);
         },
         refreshSourcesAndLayers({ newSources = [], oldSources = [], newLayers = [], oldLayers = [] }) {
             if (!this.map) return;
@@ -366,19 +376,19 @@ export default {
                 const _marker = new mapboxgl.Marker({
                     color: marker.color,
                     draggable: marker.draggable,
-                    element: marker.icon ? el : undefined
+                    element: marker.icon ? el : undefined,
                 })
                     .setLngLat([marker.position.lng, marker.position.lat])
                     .addTo(this.map);
-                if (marker.content && !this.content.disablePopups) _marker.setPopup(new mapboxgl.Popup({...this.popupOptions}).setHTML(marker.content))
+                if (marker.content && !this.content.disablePopups)
+                    _marker.setPopup(new mapboxgl.Popup({ ...this.popupOptions }).setHTML(marker.content));
 
-                _marker.getElement().addEventListener('click', (e) => this.handleMarkerClick(marker, e));
-                _marker.getElement().addEventListener('mouseenter', (e) => this.handleMarkerMouseover(marker, e));
-                _marker.getElement().addEventListener('mouseleave', (e) => this.handleMarkerMouseout(marker, e));
+                _marker.getElement().addEventListener('click', e => this.handleMarkerClick(marker, e));
+                _marker.getElement().addEventListener('mouseenter', e => this.handleMarkerMouseover(marker, e));
+                _marker.getElement().addEventListener('mouseleave', e => this.handleMarkerMouseout(marker, e));
                 _marker.on('dragstart', event => this.handleMarkerDrag(marker, event));
                 _marker.on('drag', event => this.handleMarkerDrag(marker, event));
                 _marker.on('dragend', event => this.handleMarkerDrag(marker, event));
-
 
                 this.markerInstances.push(_marker);
             }
@@ -388,13 +398,13 @@ export default {
         fitMarkersBounds() {
             if (!this.map || !this.markers.length) return;
             // Apply a default zoom if there is only one marker
-            if(this.markers.length === 1) {
-                this.map.flyTo({center: this.markers[0].position, zoom: this.content.zoom})
-                return
+            if (this.markers.length === 1) {
+                this.map.flyTo({ center: this.markers?.[0].position, zoom: this.content.zoom });
+                return;
             }
             const baseBounds = new mapboxgl.LngLatBounds(
-                [this.markers[0].position.lng, this.markers[0].position.lat],
-                [this.markers[0].position.lng, this.markers[0].position.lat]
+                [this.markers?.[0].position.lng, this.markers?.[0].position.lat],
+                [this.markers?.[0].position.lng, this.markers?.[0].position.lat]
             );
             const bounds = this.markers.reduce((bounds, marker) => {
                 return bounds.extend([marker.position.lng, marker.position.lat]);
@@ -446,8 +456,8 @@ export default {
             return _source;
         },
         formatUrl(url) {
-            if(typeof url !== 'string') return null
-            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`
+            if (typeof url !== 'string') return null;
+            return url.startsWith('designs/') ? `${wwLib.wwUtils.getCdnPrefix()}${url}` : `${url}`;
         },
         formatLayer(layer) {
             const _layer = { ...layer };
@@ -470,12 +480,12 @@ export default {
         /* wwEditor:start */
         getMarkerTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
-            return { marker: this.markers[0], domEvent: { x: 0, y: 0 } };
+            return { marker: this.markers?.[0], domEvent: { x: 0, y: 0 } };
         },
         getMarkerDragTestEvent() {
             if (!this.markers.length) throw new Error('No markers found');
             return {
-                marker: this.markers[0],
+                marker: this.markers?.[0],
                 lngLat: {
                     lat: 48.84872727506581,
                     lng: 2.351657694024656,
