@@ -130,24 +130,24 @@ export default {
             const heightField = this.content.markersHeightField || DEFAULT_MARKERS_HEIGHT_FIELD;
             const widthField = this.content.markersWidthField || DEFAULT_MARKERS_WIDTH_FIELD;
 
-            const data = wwLib.wwCollection.getCollectionData(this.content.markers);
+            const data = wwLib.wwUtils.getDataFromCollection(this.content.markers);
             if (!Array.isArray(data)) return [];
 
             return data.map(marker => ({
-                content: wwLib.resolveObjectPropertyPath(marker, contentField) || '',
-                color: wwLib.resolveObjectPropertyPath(marker, colorField) || this.content.defaultMarkerColor || null,
+                content: wwLib.wwUtils.resolveObjectPropertyPath(marker, contentField) || '',
+                color: wwLib.wwUtils.resolveObjectPropertyPath(marker, colorField) || this.content.defaultMarkerColor || null,
                 draggable:
-                    wwLib.resolveObjectPropertyPath(marker, draggableField) ||
+                    wwLib.wwUtils.resolveObjectPropertyPath(marker, draggableField) ||
                     this.content.defaultMarkerDraggable ||
                     false,
                 position: {
-                    lat: Number(wwLib.resolveObjectPropertyPath(marker, latField) || 0),
-                    lng: Number(wwLib.resolveObjectPropertyPath(marker, lngField) || 0),
+                    lat: Number(wwLib.wwUtils.resolveObjectPropertyPath(marker, latField) || 0),
+                    lng: Number(wwLib.wwUtils.resolveObjectPropertyPath(marker, lngField) || 0),
                 },
                 icon: this.content.customMarker ? {
-                    img: wwLib.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
-                    height: wwLib.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
-                    width: wwLib.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '40px'
+                    img: wwLib.wwUtils.resolveObjectPropertyPath(marker, iconField) || this.content.defaultMarkerIcon || null,
+                    height: wwLib.wwUtils.resolveObjectPropertyPath(marker, heightField) || this.content.defaultMarkerHeight || 'auto',
+                    width: wwLib.wwUtils.resolveObjectPropertyPath(marker, widthField) || this.content.defaultMarkerWidth || '40px'
                 } : null,
                 rawData: marker,
             }));
@@ -158,14 +158,14 @@ export default {
             const sourcesOptionsField = this.content.sourcesOptionsField || DEFAULT_SOURCES_OPTIONS_FIELD;
             const sourcesUrlField = this.content.sourcesUrlField || DEFAULT_SOURCES_URL_FIELD;
 
-            const data = wwLib.wwCollection.getCollectionData(this.content.sources);
+            const data = wwLib.wwUtils.getDataFromCollection(this.content.sources);
             if (!Array.isArray(data)) return [];
 
             return data.map(source => ({
-                id: wwLib.resolveObjectPropertyPath(source, sourcesIdField) || '',
-                type: wwLib.resolveObjectPropertyPath(source, sourcesTypeField) || '',
-                url: wwLib.resolveObjectPropertyPath(source, sourcesUrlField) || '',
-                options: wwLib.resolveObjectPropertyPath(source, sourcesOptionsField) || {},
+                id: wwLib.wwUtils.resolveObjectPropertyPath(source, sourcesIdField) || '',
+                type: wwLib.wwUtils.resolveObjectPropertyPath(source, sourcesTypeField) || '',
+                url: wwLib.wwUtils.resolveObjectPropertyPath(source, sourcesUrlField) || '',
+                options: wwLib.wwUtils.resolveObjectPropertyPath(source, sourcesOptionsField) || {},
             }));
         },
         layers() {
@@ -180,20 +180,20 @@ export default {
             const layersFilterField = this.content.layersFilterField || DEFAULT_LAYERS_FILTER_FIELD;
             const layersMetadataField = this.content.layersMetadataField || DEFAULT_LAYERS_METADATA_FIELD;
 
-            const data = wwLib.wwCollection.getCollectionData(this.content.layers);
+            const data = wwLib.wwUtils.getDataFromCollection(this.content.layers);
             if (!Array.isArray(data)) return [];
 
             return data.map(layer => ({
-                id: wwLib.resolveObjectPropertyPath(layer, layersIdField) || '',
-                type: wwLib.resolveObjectPropertyPath(layer, layersTypeField) || '',
-                source: wwLib.resolveObjectPropertyPath(layer, layersSourceField) || '',
-                sourceLayer: wwLib.resolveObjectPropertyPath(layer, layersSourceLayerField) || '',
-                minzoom: wwLib.resolveObjectPropertyPath(layer, layersMinZoomField) || 0,
-                maxzoom: wwLib.resolveObjectPropertyPath(layer, layersMaxZoomField) || 24,
-                layout: wwLib.resolveObjectPropertyPath(layer, layersLayoutField) || {},
-                paint: wwLib.resolveObjectPropertyPath(layer, layersPaintField) || {},
-                filter: wwLib.resolveObjectPropertyPath(layer, layersFilterField) || null,
-                metadata: wwLib.resolveObjectPropertyPath(layer, layersMetadataField) || null,
+                id: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersIdField) || '',
+                type: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersTypeField) || '',
+                source: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersSourceField) || '',
+                sourceLayer: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersSourceLayerField) || '',
+                minzoom: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersMinZoomField) || 0,
+                maxzoom: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersMaxZoomField) || 24,
+                layout: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersLayoutField) || {},
+                paint: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersPaintField) || {},
+                filter: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersFilterField) || null,
+                metadata: wwLib.wwUtils.resolveObjectPropertyPath(layer, layersMetadataField) || null,
             }));
         },
     },
