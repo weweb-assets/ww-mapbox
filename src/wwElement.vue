@@ -86,6 +86,7 @@ export default {
         return {
             resizeObserver: null,
             map: null,
+            styleLoaded: false,
             markerInstances: [],
             componentKey: 0,
             center,
@@ -253,6 +254,8 @@ export default {
         },
         mapStyle(value) {
             if (!this.map) return;
+            if (this.error) return this.loadMap();
+            this.styleLoaded = false;
             this.map.setStyle(value);
         },
         center(value) {
@@ -274,23 +277,34 @@ export default {
     },
     methods: {
         loadMap() {
-            this.error = '';
+            // The map container is not rendered while an error is displayed
+            if (this.error) {
+                this.error = '';
+                return this.$nextTick(this.loadMap);
+            }
             if (!this.content.apiAccessToken) return;
             mapboxgl.accessToken = this.content.apiAccessToken;
             const mapEl = document.getElementById(this.mapContainerId)
             if (this.map && this.resizeObserver) this.resizeObserver.unobserve(mapEl)
             if (mapEl) mapEl.innerHTML = '';
-            this.map = new mapboxgl.Map({
-                container: this.mapContainerId,
-                style: this.mapStyle,
-                center: this.center,
-                zoom: this.content.zoom,
-                projection: this.content.mapProjection,
-                scrollZoom: this.content.scrollZoom,
-                trackResize: this.content.trackResize,
-                logoPosition: this.content.logoPosition,
-                attributionControl: false,
-            });
+            this.styleLoaded = false;
+            try {
+                this.map = new mapboxgl.Map({
+                    container: this.mapContainerId,
+                    style: this.mapStyle,
+                    center: this.center,
+                    zoom: this.content.zoom,
+                    projection: this.content.mapProjection,
+                    scrollZoom: this.content.scrollZoom,
+                    trackResize: this.content.trackResize,
+                    logoPosition: this.content.logoPosition,
+                    attributionControl: false,
+                });
+            } catch (error) {
+                // mapbox-gl v3 throws when WebGL 2 is unavailable
+                this.error = error.message;
+                return;
+            }
             this.setMap(markRaw(this.map))
             this.map.on('load', () => this.fireEvent('map:load'));
             this.map.on('render', () => this.fireEvent('map:render'));
@@ -298,6 +312,7 @@ export default {
             this.map.on('style.load', () => {
                 this.map.setFog({}); // Set the default atmosphere style
             });
+            this.map.on('styledata', () => (this.styleLoaded = true));
             this.map.on('move', () => this.setCenter(this.map.getCenter()));
             this.map.on('click', this.handleMapClick);
             this.map.on('movestart', this.handleMapMove);
@@ -309,7 +324,9 @@ export default {
             this.map.on('load', () => {
                 this.refreshSourcesAndLayers({ newSources: this.sources, newLayers: this.layers });
             });
+            // Only a style that fails to load is fatal, later errors (tiles, images, layers...) must not hide the map
             this.map.on('error', event => {
+                if (this.styleLoaded) return wwLib.wwLog.warn('WW-MAPBOX', event.error);
                 this.error = event.error;
             });
 
@@ -364,7 +381,8 @@ export default {
                 el.style.width = marker.icon?.width;
                 el.style.height = marker.icon?.height;
                 const _marker = new mapboxgl.Marker({
-                    color: marker.color,
+                    // mapbox-gl v3 only falls back to its default color on undefined, null renders a black marker
+                    color: marker.color || undefined,
                     draggable: marker.draggable,
                     element: marker.icon ? el : undefined
                 })
