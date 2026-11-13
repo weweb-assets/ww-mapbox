@@ -31,7 +31,6 @@ Properties:
 - trackResize: boolean - Track window resize. Default: true
 - defaultMarkerDraggable: boolean - Markers draggable by default. Default: false
 - fixedBounds: boolean - Auto-adjust bounds to fit markers. Default: true
-- text: string|object - Input field text. Default: ""
 - markers: array - Marker objects with content, position, style properties
 - sources: array - Source objects with id, type, url, options
 - layers: array - Layer objects with styling and rendering properties
@@ -58,3 +57,8 @@ Example:
 <elements>
 {"uid":0,"tag":"ww-mapbox","props":{"default":{"mapStyle":"mapbox://styles/mapbox/streets-v11","styleUrl":"","mapProjection":"globe","logoPosition":"bottom-left","customMarker":false,"defaultMarkerColor":"#F23636","defaultMarkerWidth":"40px","defaultMarkerHeight":"auto","disablePopups":false,"popupHideCloseButton":false,"popupStayOpenOnClick":false,"popupCloseOnMove":false,"popupMaxWidth":"240px","apiAccessToken":"...","lat":"40.712784","lng":"-74.005941","zoom":9,"scrollZoom":true,"trackResize":true,"defaultMarkerDraggable":false,"fixedBounds":true,"markers":[{"title":"New York","content":"New York, often called New York City (NYC) to distinguish it from the State of New York, is the most populous city in the United States.","lat":40.712784,"lng":-74.005941,"color":null,"draggable":false},{"title":"Brooklyn","content":"Brooklyn is a borough of New York City, coextensive with Kings County, in the U.S. state of New York.","lat":40.650002,"lng":-73.949997,"color":null,"draggable":false}]}},"styles":{"default":{"height":"600px","aspectRatio":"unset"}}}
 </elements>
+
+Notes:
+- Provide a public Mapbox access token intended for browser use; never place a secret token in component content.
+- Map rendering requires WebGL 2. The component displays an error when Mapbox cannot initialize.
+- Marker popup content is interpreted as HTML. Use trusted or sanitized content.
